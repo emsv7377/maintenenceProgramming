@@ -5,6 +5,18 @@
   text-align: center;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.cell {
+  flex-grow: 1;
+  flex-basis: 0;
+  border: 1px solid white;
+  height: 20px;
+  width: 20px;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
