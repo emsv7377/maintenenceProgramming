@@ -1,4 +1,5 @@
 import React from 'react';
+import Cheese from './Cheese';
 
 function GameBoard(props) {
   const rows = [];
@@ -21,7 +22,9 @@ function GameBoard(props) {
       {rows.map((cells, y) => (
         <div key={y} className="row">
           {cells.map(({ x, y }) => (
-            <div key={`${x}-${y}`} className="cell"/>
+            <div key={`${x}-${y}`} className="cell">
+              <Cheese/>
+            </div>
           ))}
         </div>
       ))}
