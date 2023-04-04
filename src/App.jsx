@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <h1>Rat-Man</h1>
-      <GameBoard width={30} height={30}/>
+      <GameBoard width={13} height={11}/>
     </div>
   )
 }
