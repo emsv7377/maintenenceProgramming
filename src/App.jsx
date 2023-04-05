@@ -1,20 +1,27 @@
 import { useState } from 'react'
+import {
+  BrowserRouter,
+  Routes, //replaces "Switch" used till v5
+  Route,
+} from "react-router-dom";
+
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
 
-//<GameBoard width={30} height={30}/>
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      
-      <h1>Rat-Man</h1>
-      <StartScreen></StartScreen>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<StartScreen/>} />
+          <Route path='/GameBoard' element={<GameBoard width={30} height={30}/>}/>
+        </Routes>
+        </BrowserRouter>
     </div>
   )
 }
