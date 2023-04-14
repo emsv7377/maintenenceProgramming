@@ -2,14 +2,25 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import GameBoard from '../components/GameBoard'
 import pacman from '../assets/pacman.png'
+import index from '../index.css?inline';
 
 function StartScreen() {
    const navigate = useNavigate();
 
-   function handleSubmit(event){
+   function navGameBoard(event){
         event.preventDefault();
         navigate('GameBoard')
    }
+
+   function navTutorial(event){
+    event.preventDefault();
+    navigate('Tutorial')
+}
+
+function navSettings(event){
+    event.preventDefault();
+    navigate('Settings')
+}
 
    return(
         <div className='body'>
@@ -23,25 +34,41 @@ function StartScreen() {
                         alt='Pacman' 
                         style={{marginBottom:40}}
                     />
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={navGameBoard}>
                         <button 
-                            style={{ 
-                                backgroundColor:'black', 
-                                color:'white', 
-                                fontSize:25, 
-                                width: 280, 
-                                height:70, 
-                                borderRadius:15, 
-                                alignSelf:'center',
-                                fontWeight:'bold'
-                            }} 
+                        style={styles}
                             type='submit'>
                                 Start new game
+                        </button>
+                    </form>
+                    <form onSubmit={navTutorial}>
+                        <button 
+                        style={styles}
+                            type='submit'>
+                                Tutorial
+                        </button>
+                    </form>
+                    <form onSubmit={navSettings}>
+                        <button 
+                        style={styles}
+                            type='submit'>
+                                Settings
                         </button>
                     </form>
             </div>
     )
    }
 
+const styles = {
+    backgroundColor:'black', 
+    color:'white', 
+    fontSize:22, 
+    width: 280, 
+    height:60, 
+    margin:10,
+    borderRadius:15, 
+    alignSelf:'center',
+    fontWeight:'bold'
+}
 
 export default StartScreen;
