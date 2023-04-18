@@ -21,6 +21,7 @@ function GameBoard(props) {
 
   function navTutorial(){
     console.log('Tutorial not implemented')
+  }
   const determineElements = (x, y) => {
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
       return <Brick/>
@@ -87,6 +88,6 @@ function GameBoard(props) {
     </div>
     </>
   );
-}}
+}
 
 export default GameBoard;

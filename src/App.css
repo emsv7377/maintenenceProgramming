@@ -10,6 +10,7 @@
   flex-direction: row;
 }
 
+
 .cell {
   display: flex;
   justify-content: center;
