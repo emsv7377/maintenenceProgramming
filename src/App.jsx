@@ -1,17 +1,12 @@
 import { useState } from 'react'
-import {
-  BrowserRouter,
-  Routes, //replaces "Switch" used till v5
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
 import Settings from './screens/Settings'
 import Tutorial from './screens/Tutorial'
+import Game from './screens/Game'
 
 function App() {
 
@@ -19,8 +14,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<StartScreen/>} />
-            <Route path='/GameBoard' element={<GameBoard width={13} height={11}/>}/>
+          <Route path='/' element={<Game/>} />
+            <Route path='/GameBoard' element={<GameBoard width={10} height={13} />}/>
             <Route path='Settings' element={<Settings/>}/>
             <Route path='Tutorial' element={<Tutorial/>}/>
         </Routes>
