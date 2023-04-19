@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 //import { useNavigation } from 'react-router-dom';
-import useState from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
+import Animate from './Animate';
 
 function GameBoard(props) {
   const rows = [];
   console.log(props)
   const { width, height } = props;
-  const [position, setPosition] = React.useState({ x: 1, y: 1 });
+  const [position, setPosition] = useState({ x: 1, y: 1 });
   Rat.position = position
-  React.useEffect(() => {
-  const handleKeyDown = (event) => {
+  
+  // Handles key presses (arrow keys)
+  useEffect(() => {
+    const handleKeyDown = (event) => {
     // Update position based on arrow key pressed
     console.log(event.key);
     switch (event.key) {
@@ -40,6 +42,7 @@ function GameBoard(props) {
   };
 },);
 
+// Creates a game board with tiles 
   for (let y = 0; y < height; y++) {
     const cells = [];
 
@@ -50,9 +53,12 @@ function GameBoard(props) {
 
   }
 
+  // Opens up the tutorial 
   function navTutorial(){
     console.log('Tutorial not implemented')
   }
+
+  // Determines element of each tile 
   const determineElements = (x, y) => {
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
       return <Brick/>
@@ -85,9 +91,7 @@ function GameBoard(props) {
       console.log('RAT position', position)
       return <Rat position={position} />;
     }
-    
-
-    return <Cheese/>
+    return <Animate> <Cheese/> </Animate>
   }
 
   return (
