@@ -1,12 +1,44 @@
 import React from 'react';
 //import { useNavigation } from 'react-router-dom';
+import useState from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
+import Rat from './Rat';
 
 function GameBoard(props) {
   const rows = [];
   console.log(props)
   const { width, height } = props;
+  const [position, setPosition] = React.useState({ x: 1, y: 1 });
+  Rat.position = position
+  React.useEffect(() => {
+  const handleKeyDown = (event) => {
+    // Update position based on arrow key pressed
+    console.log(event.key);
+    switch (event.key) {
+      case 'ArrowUp':
+        setPosition((prevPosition) => ({ ...prevPosition, y: prevPosition.y - 1 }));
+        break;
+      case 'ArrowDown':
+        setPosition((prevPosition) => ({ ...prevPosition, y: prevPosition.y + 1 }));
+        break;
+      case 'ArrowLeft':
+        setPosition((prevPosition) => ({ ...prevPosition, x: prevPosition.x - 1 }));
+        break;
+      case 'ArrowRight':
+        setPosition((prevPosition) => ({ ...prevPosition, x: prevPosition.x + 1 }));
+        break;
+      default:
+        // Ignore other keys
+        break;
+    }
+  };
+  window.addEventListener('keydown', handleKeyDown);
+  
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown);
+  };
+},);
 
   for (let y = 0; y < height; y++) {
     const cells = [];
@@ -17,7 +49,6 @@ function GameBoard(props) {
     rows.push(cells);
 
   }
-  console.log(rows)
 
   function navTutorial(){
     console.log('Tutorial not implemented')
@@ -50,6 +81,11 @@ function GameBoard(props) {
     if (x === 10 && y < height - 2 && y > height - 9){
       return <Brick/>
     }
+    if (x === position.x && y === position.y) {
+      console.log('RAT position', position)
+      return <Rat position={position} />;
+    }
+    
 
     return <Cheese/>
   }
