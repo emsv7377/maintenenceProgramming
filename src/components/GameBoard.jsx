@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
-import Animate from './Animate';
 
 function GameBoard(props) {
   const rows = [];
@@ -91,7 +90,7 @@ function GameBoard(props) {
       console.log('RAT position', position)
       return <Rat position={position} />;
     }
-    return <Animate> <Cheese/> </Animate>
+    return <Cheese/> 
   }
 
   return (
