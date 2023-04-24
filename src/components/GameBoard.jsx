@@ -6,16 +6,19 @@ import Rat from './Rat';
 
 function GameBoard(props) {
   const rows = [];
-  console.log(props)
   const { width, height } = props;
+  console.log(props)
   const [position, setPosition] = useState({ x: 1, y: 1 });
-  Rat.position = position
   
+  Rat.position = position;
+  
+  const [points, setPoints] = useState(0); 
+
   // Handles key presses (arrow keys)
   useEffect(() => {
     const handleKeyDown = (event) => {
     // Update position based on arrow key pressed
-    console.log(event.key);
+    //console.log(event.key);
     switch (event.key) {
       case 'ArrowUp':
         setPosition((prevPosition) => ({ ...prevPosition, y: prevPosition.y - 1 }));
@@ -35,62 +38,149 @@ function GameBoard(props) {
     }
   };
   window.addEventListener('keydown', handleKeyDown);
-  
   return () => {
     window.removeEventListener('keydown', handleKeyDown);
   };
 },);
 
 // Creates a game board with tiles 
+ const occupiedCell = ''; 
   for (let y = 0; y < height; y++) {
     const cells = [];
 
     for (let x = 0; x < width; x++) {
-      cells.push({ x, y });
+      cells.push({ x, y, occupiedCell });
     }
     rows.push(cells);
-
   }
-
+  const [board, setBoard] = useState(rows);
+ 
   // Opens up the tutorial 
   function navTutorial(){
     console.log('Tutorial not implemented')
   }
 
+  /**
+   * Searches through each element in an array and nested arrays to compare x and y values
+   * @param {*} rows Array consisting of arrays with cells 
+   * @param {*} x The coordinate x to search for 
+   * @param {*} y 
+   * @returns An array with the indices of the match, if no match [-1,-1] is returned 
+   */
+function findIndex(rows, x, y){
+  let index = [-1,-1]
+  // Since the array rows is a matrix we need to search th
+    for (let i = 0; i < rows.length; i++){
+      for(let j = 0; j < rows[i].length; j++){
+        if(rows[i][j].x === x && rows[i][j].y === y){
+          index = [i,j];
+          return index;
+        } 
+      }
+    }
+    return index;
+   }
+
+/**
+ * Updates the occupiedCell parameter of an element in the array rows 
+ * @param {*} rows The array of cells 
+ * @param {*} x The x coordinate of the cell
+ * @param {*} y The y coordinate of the cell 
+ * @param {*} value The new occupiedCell value for the coordinates
+ * @returns The updated rows array 
+ */
+ function updateOccupiedCell(rows, x, y, value){
+
+  // Find index of the current coordinates in the array rows 
+  let index = findIndex(rows, x, y);
+  // Catch error if invalid index 
+  if(index == [-1,-1]){
+    // TODO: do something 
+    console.log('error, did not find element')
+  } else {
+    // Update the occupiedCell value
+    const row = rows[index[0]][index[1]];
+    row.occupiedCell = value;
+    return rows;
+  }
+ }
+
+ /**
+  * Checks what type of cell RatMan stands on 
+  * @param {*} rows 
+  * @param {*} position 
+  */
+ function checkRatManPosition(rows, position){
+  let index = findIndex(rows, position.x, position.y)
+  const value = rows[index[0]][index[1]].occupiedCell; 
+  if(value === 'cheese'){
+    eatCheese()
+    console.log('eat a cheese')
+  } else if(value === 'brick'){
+    collision()
+    console.log('collision')
+  }
+
+  function eatCheese(){
+    // TODO: increment points and remove cheese from cell
+    console.log('ate a cheese')
+  }
+
+  function collision(){
+    // TODO: collision, decrement lives? 
+    console.log('collided')
+  }
+
+
+ }
   // Determines element of each tile 
   const determineElements = (x, y) => {
+    let val = 'brick';
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (y === 2 && x < width - 5 && x > 1) {
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (y > 2 && y < height - 2 && x === 2){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === 4 && y < height - 2 && y > height - 8){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === 5 && y < height - 5 && y > height - 8){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === 6 && ((y < height - 5 && y > height - 8) || (y < height - 2 && y > height - 5))){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === 7 && y < height - 2 && y > height - 5){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === 8 && ((y < height - 2 && y > height - 6) || (y === height - 7))){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === 10 && y < height - 2 && y > height - 9){
+      updateOccupiedCell(rows, x, y, val)
       return <Brick/>
     }
     if (x === position.x && y === position.y) {
       console.log('RAT position', position)
+      checkRatManPosition(rows, position)
       return <Rat position={position} />;
     }
-    return <Cheese/> 
+      val = 'cheese'
+      updateOccupiedCell(rows, x, y, val)
+      return <Cheese/>
+
   }
 
   return (
@@ -113,6 +203,7 @@ function GameBoard(props) {
             ?
           </button>
         </form>
+
     </div>
     <div className="game-board" style={{backgroundColor: 'gray',}}>
       {rows.map((cells, y) => (

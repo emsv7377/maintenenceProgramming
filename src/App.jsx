@@ -14,7 +14,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Game/>} />
+          <Route path='/' element={<StartScreen/>} />
             <Route path='/GameBoard' element={<GameBoard width={10} height={13} />}/>
             <Route path='Settings' element={<Settings/>}/>
             <Route path='Tutorial' element={<Tutorial/>}/>
