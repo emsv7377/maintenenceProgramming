@@ -10,7 +10,7 @@ const Game = () => {
 
     return(
         <>
-        <GameBoard width={13} height={11}>
+        <GameBoard width={15} height={13}>
         </GameBoard>
         </>
     )

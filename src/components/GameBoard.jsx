@@ -17,6 +17,7 @@ function GameBoard(props) {
   // Handles key presses (arrow keys)
   useEffect(() => {
     const handleKeyDown = (event) => {
+
     // Update position based on arrow key pressed
     //console.log(event.key);
     switch (event.key) {
@@ -43,8 +44,9 @@ function GameBoard(props) {
   };
 },);
 
-// Creates a game board with tiles 
+// Creates a game board with cells as a matrice 
  const occupiedCell = ''; 
+ // const occupiedCell = 'cheese';
   for (let y = 0; y < height; y++) {
     const cells = [];
 
@@ -53,7 +55,6 @@ function GameBoard(props) {
     }
     rows.push(cells);
   }
-  const [board, setBoard] = useState(rows);
  
   // Opens up the tutorial 
   function navTutorial(){
@@ -82,57 +83,71 @@ function findIndex(rows, x, y){
    }
 
 /**
- * Updates the occupiedCell parameter of an element in the array rows 
+ * Updates the occupiedCell parameter of a chosen cell in the array rows 
  * @param {*} rows The array of cells 
- * @param {*} x The x coordinate of the cell
- * @param {*} y The y coordinate of the cell 
- * @param {*} value The new occupiedCell value for the coordinates
- * @returns The updated rows array 
+ * @param {*} x The x coordinate of the chosen cell
+ * @param {*} y The y coordinate of the chosen cell 
+ * @param {*} value The new occupiedCell value for x and y
+ * @returns The updated rows array  
  */
  function updateOccupiedCell(rows, x, y, value){
 
   // Find index of the current coordinates in the array rows 
   let index = findIndex(rows, x, y);
   // Catch error if invalid index 
-  if(index == [-1,-1]){
-    // TODO: do something 
-    console.log('error, did not find element')
-  } else {
-    // Update the occupiedCell value
+  if(index === [-1,-1]){
+    // TODO: catch error somehow  
+    console.log('Error, did not find element')
+    return;
+  } 
+    // Update the occupiedCell value to indicate type of cell
     const row = rows[index[0]][index[1]];
     row.occupiedCell = value;
     return rows;
-  }
  }
 
  /**
   * Checks what type of cell RatMan stands on 
-  * @param {*} rows 
-  * @param {*} position 
+  * @param {*} rows The game board
+  * @param {*} x The x coordinate for Ratmans position
+  * @param {*} y The y coordinate for Ratmans position
   */
- function checkRatManPosition(rows, position){
-  let index = findIndex(rows, position.x, position.y)
-  const value = rows[index[0]][index[1]].occupiedCell; 
-  if(value === 'cheese'){
-    eatCheese()
-    console.log('eat a cheese')
-  } else if(value === 'brick'){
-    collision()
-    console.log('collision')
+ function checkRatManPosition(rows, x, y){
+  // Finds index in the game board for the position 
+  let index = findIndex(rows, x, y)
+  const row = rows[index[0]][index[1]]; 
+  // Value of the current cell
+  const value = row.occupiedCell;
+  console.log('row', row)
+  console.log('value: ', value)
+  if(value.toString() === ''){
+    console.log('error, empty cell')
+    // TODO: catch error
   }
+  if(value.toString() === 'cheese'){
+    eatCheese()
+  } else if(value.toString() === 'brick'){
+    collision()
+  }
+  return value;
+ }
 
+ /**
+  * Increments point counter and removes cheese from board  
+  */
   function eatCheese(){
     // TODO: increment points and remove cheese from cell
-    console.log('ate a cheese')
+    console.log('eatCheese()')
   }
 
+  /**
+   * Decrement lives of player and animation?
+   */
   function collision(){
     // TODO: collision, decrement lives? 
-    console.log('collided')
+    console.log('collision()')
   }
 
-
- }
   // Determines element of each tile 
   const determineElements = (x, y) => {
     let val = 'brick';
@@ -174,13 +189,13 @@ function findIndex(rows, x, y){
     }
     if (x === position.x && y === position.y) {
       console.log('RAT position', position)
-      checkRatManPosition(rows, position)
       return <Rat position={position} />;
     }
-      val = 'cheese'
-      updateOccupiedCell(rows, x, y, val)
-      return <Cheese/>
-
+    val = 'cheese'
+    updateOccupiedCell(rows, x, y, val)
+    console.log('rows',rows)
+    checkRatManPosition(rows, x, y)
+    return <Cheese/>
   }
 
   return (
