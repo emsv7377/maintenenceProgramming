@@ -11,7 +11,6 @@ function BackgroundMusic(){
             onend: () => setIsPlaying(false)
         })
     
-
     const togglePlay = () => {
         if(isPlaying){
             pause();
@@ -23,7 +22,7 @@ function BackgroundMusic(){
     
     return(
        <button onClick={() => togglePlay()}>
-        Play
+        Play/Stop
        </button>
             
     )
