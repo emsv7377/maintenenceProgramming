@@ -4,6 +4,8 @@ import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
 
+import BackgroundMusic from './BackgroundMusic'
+
 function GameBoard(props) {
   const rows = [];
   const { width, height } = props;
@@ -206,10 +208,11 @@ function GameBoard(props) {
       updateCellValue(rows, x, y, val)
       return <Cheese/>
 
-  }
-
-  return (
-    <>
+    }
+    
+    return (
+      <>
+      <BackgroundMusic/>
     <div className='body' style={{flexDirection:'row', fontSize:30}}>
       <form onSubmit={navTutorial}>
         {'Score: '}{points}
