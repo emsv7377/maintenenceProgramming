@@ -13,40 +13,75 @@ function GameBoard(props) {
   const [position, setPosition] = useState({ x: 1, y: 1 });
   // Ratmans position
   Rat.position = position;
+  const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
+  const [open, setOpen] = useState(false) // state for Rat open or closed
+  const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
 
   const [hiddenCheese, setHiddenCheese] = useState({ x:1, y:1, hidden: true})  
   const [points, setPoints] = useState(0); 
-
-  // Handles key presses (arrow keys)
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-    // Update position based on arrow key pressed
-    //console.log(event.key);
-    switch (event.key) {
+  // sets direction state according to keyboard input
+  const handleKeyPress = (e) => {
+    switch (e.key) {
+      case 'w':
       case 'ArrowUp':
-        setPosition((prevPosition) => ({ ...prevPosition, y: prevPosition.y - 1 }));
-        break;
-      case 'ArrowDown':
-        setPosition((prevPosition) => ({ ...prevPosition, y: prevPosition.y + 1 }));
-        break;
+        setDirection('u')
+        break
+      case 'a':
       case 'ArrowLeft':
-        setPosition((prevPosition) => ({ ...prevPosition, x: prevPosition.x - 1 }));
-        break;
+        setDirection('l')
+        break
+      case 's':
+      case 'ArrowDown':
+        setDirection('d')
+        break
+      case 'd':
       case 'ArrowRight':
-        setPosition((prevPosition) => ({ ...prevPosition, x: prevPosition.x + 1 }));
-        break;
-      default:
-        // Ignore other keys
-        break;
+        setDirection('r')
+        break
     }
-    // Checks if Ratman steps on a cell with cheese
-    checkRatManPosition(rows, position.x, position.y);
-  };
-  window.addEventListener('keydown', handleKeyDown);
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-  };
-},[rows, position.x, position.y]);
+  }
+
+  // moves player according to direction state
+  const move = () => {
+    let newCoords = {}
+    switch (direction) {
+      case 'r':
+        newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
+        break
+      case 'l':
+        newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
+        break
+      case 'u':
+        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)       
+        break
+      case 'd':
+        newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
+        break
+    }
+    // Checks what type of cell Ratman is standing on
+    checkRatManPosition(rows, playerCoords.x, playerCoords.y);
+  }
+  // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress)
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  },[rows, playerCoords.x, playerCoords.y])
+
+  // change open state and player coordinates every 300 ms.
+  useEffect(() => {
+    setTimeout(() => {
+      setOpen(!open)
+      move()
+    }, 200)
+  }, [open])
+  //setTimeout(() => setOpen(!open), 500)
+  
 
 // Creates a game board with cells as a matrice
   // cellValue shows type of cell 
@@ -155,60 +190,51 @@ function GameBoard(props) {
     return(setPoints(p));
   }
   
-
-  // Determines element of each tile 
-  const determineElements = (hiddenCheese,x, y) => {
-    let val = 'brick';
-    
+  const isBrick = (x, y) => {
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (y === 2 && x < width - 5 && x > 1) {
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (y > 2 && y < height - 2 && x === 2){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (x === 4 && y < height - 2 && y > height - 8){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (x === 5 && y < height - 5 && y > height - 8){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (x === 6 && ((y < height - 5 && y > height - 8) || (y < height - 2 && y > height - 5))){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (x === 7 && y < height - 2 && y > height - 5){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (x === 8 && ((y < height - 2 && y > height - 6) || (y === height - 7))){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
+      return true
     }
     if (x === 10 && y < height - 2 && y > height - 9){
-      updateCellValue(rows, x, y, val)
-      return <Brick/>
-    } 
-    if (x === position.x && y === position.y) {
-      return <Rat position={position} />;
+      return true
     }
-    // If the cheese has been eaten the cell should be empty 
-    // TODO: Currently only hiding the previously eaten cheese
-    if(hiddenCheese.hidden === true && x === hiddenCheese.x && y === hiddenCheese.y){
-      return;
-    }
-      val = 'cheese'
-      updateCellValue(rows, x, y, val)
-      return <Cheese/>
 
+    return false
+  }
+
+  const determineElements = (x, y) => {
+    if (x === playerCoords.x && y === playerCoords.y) {
+      return <Rat open={open}/>
     }
+    if (isBrick(x, y)) {
+      return <Brick/>
+    }
+    /*if(hiddenCheese.hidden === true && x === hiddenCheese.x && y === hiddenCheese.y){
+      return;
+    }*/
+    return <Cheese/>
+  }
+
     
     return (
       <>
@@ -241,7 +267,7 @@ function GameBoard(props) {
         <div key={y} className="row" style={{ }}>
           {cells.map(({ x, y }) => (
             <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-              {determineElements(hiddenCheese,x,y)}
+              {determineElements(x,y)}
               
             </div>
           ))}

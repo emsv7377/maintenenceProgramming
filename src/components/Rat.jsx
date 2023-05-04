@@ -1,18 +1,15 @@
-import React from 'react';
+function Rat({ open }) {
 
-function Rat(props) {
-  const { x, y } = props.position; // Get x and y from props.position
   return(
-    <img 
-    src="Rat.svg"
-    alt="Rat"
-    style={{
-        width: '60%',
-        height: '60%'
-    }}
-    />
-)
+      <img 
+      src={`rat-${open ? 'open' : 'closed'}.svg`} // read different filenames depending on open prop
+      alt="rat2"
+      style={{
+          width: '100%',
+          height: '100%'
+      }}
+      />
+  )
 }
-
 
 export default Rat;
