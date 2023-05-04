@@ -70,7 +70,7 @@ function GameBoard(props) {
     setTimeout(() => {
       setOpen(!open)
       move()
-    }, 300)
+    }, 200)
   }, [open])
   //setTimeout(() => setOpen(!open), 500)
 
