@@ -8,10 +8,11 @@ function GameBoard(props) {
   const rows = [];
   console.log(props)
   const { width, height } = props;
-  const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1});
-  const [open, setOpen] = useState(false)
-  const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own)
+  const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
+  const [open, setOpen] = useState(false) // state for Rat open or closed
+  const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
 
+  // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
     switch (e.key) {
       case 'w':
@@ -33,6 +34,7 @@ function GameBoard(props) {
     }
   }
 
+  // moves player according to direction state
   const move = () => {
     switch (direction) {
       case 'r':
@@ -50,6 +52,7 @@ function GameBoard(props) {
     }
   }
 
+  // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress)
     return () => {
@@ -57,6 +60,7 @@ function GameBoard(props) {
     }
   })
 
+  // change open state and player coordinates every 300 ms.
   useEffect(() => {
     setTimeout(() => {
       setOpen(!open)
@@ -78,7 +82,7 @@ function GameBoard(props) {
 
   const determineElements = (x, y) => {
     if (x === playerCoords.x && y === playerCoords.y) {
-      return <Rat open={open}/> //<div onClick={() => setPlayerCoords({x: playerCoords.x + 1, y: playerCoords.y + 1})}><Rat2/></div>
+      return <Rat open={open}/>
     }
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
       return <Brick/>

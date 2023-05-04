@@ -2,7 +2,7 @@ function Rat({ open }) {
 
     return(
         <img 
-        src={`rat-${open ? 'open' : 'closed'}.svg`}
+        src={`rat-${open ? 'open' : 'closed'}.svg`} // read different filenames depending on open prop
         alt="rat2"
         style={{
             width: '100%',
