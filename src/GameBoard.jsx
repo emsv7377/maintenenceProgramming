@@ -1,11 +1,73 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
+import Rat from './Rat';
 
 function GameBoard(props) {
   const rows = [];
   console.log(props)
   const { width, height } = props;
+  const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
+  const [open, setOpen] = useState(false) // state for Rat open or closed
+  const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
+
+  // sets direction state according to keyboard input
+  const handleKeyPress = (e) => {
+    switch (e.key) {
+      case 'w':
+      case 'ArrowUp':
+        setDirection('u')
+        break
+      case 'a':
+      case 'ArrowLeft':
+        setDirection('l')
+        break
+      case 's':
+      case 'ArrowDown':
+        setDirection('d')
+        break
+      case 'd':
+      case 'ArrowRight':
+        setDirection('r')
+        break
+    }
+  }
+
+  // moves player according to direction state
+  const move = () => {
+    switch (direction) {
+      case 'r':
+        setPlayerCoords({ x: (playerCoords.x + 1) % width, y: playerCoords.y})
+        break
+      case 'l':
+        setPlayerCoords({ x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y})
+        break
+      case 'u':
+        setPlayerCoords({ x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)})
+        break
+      case 'd':
+        setPlayerCoords({ x: playerCoords.x, y: (playerCoords.y + 1) % height})
+        break
+    }
+  }
+
+  // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress)
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  })
+
+  // change open state and player coordinates every 300 ms.
+  useEffect(() => {
+    setTimeout(() => {
+      setOpen(!open)
+      move()
+    }, 300)
+  }, [open])
+  //setTimeout(() => setOpen(!open), 500)
 
   for (let y = 0; y < height; y++) {
     const cells = [];
@@ -19,6 +81,9 @@ function GameBoard(props) {
   console.log(rows)
 
   const determineElements = (x, y) => {
+    if (x === playerCoords.x && y === playerCoords.y) {
+      return <Rat open={open}/>
+    }
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
       return <Brick/>
     }
@@ -54,7 +119,7 @@ function GameBoard(props) {
     <div className="game-board" style={{backgroundColor: 'gray',}}>
       {rows.map((cells, y) => (
         <div key={y} className="row">
-          {cells.map(({ x, y }) => (
+          {cells.map(({ x, _y }) => (
             <div key={`${x}-${y}`} className="cell">
               {determineElements(x,y)}
             </div>
