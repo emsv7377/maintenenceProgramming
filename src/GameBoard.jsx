@@ -36,18 +36,23 @@ function GameBoard(props) {
 
   // moves player according to direction state
   const move = () => {
+    let newCoords = {}
     switch (direction) {
       case 'r':
-        setPlayerCoords({ x: (playerCoords.x + 1) % width, y: playerCoords.y})
+        newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
         break
       case 'l':
-        setPlayerCoords({ x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y})
+        newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
         break
       case 'u':
-        setPlayerCoords({ x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)})
+        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)       
         break
       case 'd':
-        setPlayerCoords({ x: playerCoords.x, y: (playerCoords.y + 1) % height})
+        newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
+        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
         break
     }
   }
@@ -78,37 +83,44 @@ function GameBoard(props) {
     rows.push(cells);
 
   }
-  console.log(rows)
+
+  const isBrick = (x, y) => {
+    if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
+      return true
+    }
+    if (y === 2 && x < width - 5 && x > 1) {
+      return true
+    }
+    if (y > 2 && y < height - 2 && x === 2){
+      return true
+    }
+    if (x === 4 && y < height - 2 && y > height - 8){
+      return true
+    }
+    if (x === 5 && y < height - 5 && y > height - 8){
+      return true
+    }
+    if (x === 6 && ((y < height - 5 && y > height - 8) || (y < height - 2 && y > height - 5))){
+      return true
+    }
+    if (x === 7 && y < height - 2 && y > height - 5){
+      return true
+    }
+    if (x === 8 && ((y < height - 2 && y > height - 6) || (y === height - 7))){
+      return true
+    }
+    if (x === 10 && y < height - 2 && y > height - 9){
+      return true
+    }
+
+    return false
+  }
 
   const determineElements = (x, y) => {
     if (x === playerCoords.x && y === playerCoords.y) {
       return <Rat open={open}/>
     }
-    if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
-      return <Brick/>
-    }
-    if (y === 2 && x < width - 5 && x > 1) {
-      return <Brick/>
-    }
-    if (y > 2 && y < height - 2 && x === 2){
-      return <Brick/>
-    }
-    if (x === 4 && y < height - 2 && y > height - 8){
-      return <Brick/>
-    }
-    if (x === 5 && y < height - 5 && y > height - 8){
-      return <Brick/>
-    }
-    if (x === 6 && ((y < height - 5 && y > height - 8) || (y < height - 2 && y > height - 5))){
-      return <Brick/>
-    }
-    if (x === 7 && y < height - 2 && y > height - 5){
-      return <Brick/>
-    }
-    if (x === 8 && ((y < height - 2 && y > height - 6) || (y === height - 7))){
-      return <Brick/>
-    }
-    if (x === 10 && y < height - 2 && y > height - 9){
+    if (isBrick(x, y)) {
       return <Brick/>
     }
 
