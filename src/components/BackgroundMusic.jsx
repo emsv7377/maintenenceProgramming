@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import useSound from 'use-sound'
-import gameSong from './audio/gameSong.wav'
+import gameSong from './audio/sneaky.mp3'
 
 function BackgroundMusic(){
     const [isPlaying, setIsPlaying] = useState(false);
