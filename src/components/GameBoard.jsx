@@ -7,18 +7,13 @@ import Rat from './Rat';
 import BackgroundMusic from './BackgroundMusic'
 
 function GameBoard(props) {
-  const rows = [];
+  const [rows,setRows] = useState([]);
   const { width, height } = props;
-  //console.log(props)
-  //const [position, setPosition] = useState({ x: 1, y: 1 });
-  // Ratmans position
-  //Rat.position = position;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
-
-  const [hiddenCheese, setHiddenCheese] = useState({ x:1, y:1, hidden: true})  
   const [points, setPoints] = useState(0); 
+
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
     switch (e.key) {
@@ -44,26 +39,38 @@ function GameBoard(props) {
   // moves player according to direction state
   const move = () => {
     let newCoords = {}
+    
+
     switch (direction) {
       case 'r':
         newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
+        if (!isBrick(newCoords.x, newCoords.y)) {
+          setPlayerCoords(newCoords)
+          eatCheese(rows,newCoords.x,newCoords.y)
+        }
         break
       case 'l':
         newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
+        if (!isBrick(newCoords.x, newCoords.y)){
+          setPlayerCoords(newCoords)
+          eatCheese(rows,newCoords.x,newCoords.y)
+        }
         break
       case 'u':
         newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
-        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)       
+        if (!isBrick(newCoords.x, newCoords.y)) {
+          setPlayerCoords(newCoords)
+          eatCheese(rows,newCoords.x,newCoords.y)
+        }       
         break
       case 'd':
         newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
-        if (!isBrick(newCoords.x, newCoords.y)) setPlayerCoords(newCoords)
+        if (!isBrick(newCoords.x, newCoords.y)) {
+          setPlayerCoords(newCoords)
+          eatCheese(rows,newCoords.x,newCoords.y)
+        }
         break
     }
-    // Checks what type of cell Ratman is standing on
-    checkRatManPosition(rows, playerCoords.x, playerCoords.y);
   }
   // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
@@ -84,19 +91,21 @@ function GameBoard(props) {
   
 
 // Creates a game board with cells as a matrice
-  // cellValue shows type of cell 
- const cellValue = ''; 
-  for (let y = 0; y < height; y++) {
-    const cells = [];
-
-    for (let x = 0; x < width; x++) {
-      cells.push({ x, y, cellValue });
+  // Cell value indicates type of cell 
+  useEffect(() => {
+    let cellValue = ''
+    let blankRows = [];
+    for (let y = 0; y < height; y++) {
+      const cells = [];
+      for (let x = 0; x < width; x++) {
+        cells.push({ x, y, cellValue });
+      }
+      blankRows.push(cells);
     }
-    rows.push(cells);
-  }
+    setRows(blankRows);
+  },[]);
  
-  // Navigates to up the tutorial
-  // TODO: Implement tutorial opening
+  // Navigates to the tutorial
   function navTutorial(){
     console.log('Tutorial not implemented')
   }
@@ -104,9 +113,9 @@ function GameBoard(props) {
 /**
  * Updates the cellValue parameter of a chosen cell in the array rows 
  * @param {*} rows The array of cells 
- * @param {String} x The x coordinate of the chosen cell
- * @param {String} y The y coordinate of the chosen cell 
- * @param {String} value  the new cellValue value for x and y
+ * @param {*} x The x coordinate of the chosen cell
+ * @param {*} y The y coordinate of the chosen cell 
+ * @param {String} newValue  the new cellValue value for x and y
  * @returns The updated rows array  
  */
  function updateCellValue(rows, x, y, newValue){
@@ -114,54 +123,55 @@ function GameBoard(props) {
   if(rows[y]){
     let cell = rows[y][x];
     if(cell){
-      cell.cellValue = newValue;
+      if(cell.cellValue === 'empty' || cell.cellValue === 'rat'){
+        return rows;
+      } else {
+        cell.cellValue = newValue;
+      }
       }
     return rows;
  }
 }
 
- /**
-  * Checks what type of cell RatMan stands on 
-  * @param {*} rows The game board
-  * @param {String} x The x coordinate for Ratmans position
-  * @param {String} y The y coordinate for Ratmans position
-  * @returns the cell value 
-  */
- function checkRatManPosition(rows, x, y){
-  let value = ''
-  
-  // Known positions of bricks
-  if (x === 0 || y === 0) {
-    value = 'brick'
-  } else {
-    const cell = rows[y][x]
-    value = cell.cellValue;
-  } 
-  // Checks if Ratman steps on a cell with cheese, or if an empty cell 
-  // Empty cell indicates that Ratman is standing on it
-  if(value === 'cheese' || value === ''){
-    value = 'cheese'
-    eatCheese(x,y)
+/**
+ * Checks if the cheese of a cell is eaten 
+ * @param {*} rows The game board
+ * @param {*} x X coordinate of the cell
+ * @param {*} y Y coordinate of the cell 
+ * @returns true if cell is empty, false otherwise 
+ */
+function isCheeseEaten(rows,x,y){
+  let cell = rows[y][x]
+  if (cell && cell.cellValue === 'empty'){
+    return true;
   }
-  else if(value === 'brick'){
-    collision()
-  } else {
-    value = 'error';
-    console.log('error')
-  }
-  return value;
- }
+  return false;
+}
 
- /**
-  * Increments point counter and removes cheese from board  
-  */
-  function eatCheese(x,y){
-    // TODO: increment points and remove cheese from cell
-    incrementPoints()
-    setHiddenCheese({x:x, y:y, hidden:true});
+/**
+ * Eats a cheese and increment score by one 
+ * @param {*} rows The game board  
+ * @param {*} x The x coordinate of the cell
+ * @param {*} y The y coordinate of the cell 
+ * @returns the updated game board 
+ */
+  function eatCheese(rows, x,y){
+    let cell = rows[y][x]
+    if(cell && !isCheeseEaten(rows,x,y)){
+      // Increment score by one
+      incrementPoints()
+      // Update cell value that it is empty 
+      updateCellValue(rows,x,y,'empty')
+      // Return the updated game board 
+      return rows;
+    } else {
+      console.log('already eaten')
+    // Return updated game board
+      return rows;
   }
+}
   /**
-   * Decrement lives of player and animation?
+   * Decrement lives of player or points? 
    */
   function collision(){
     // TODO: collision, decrement lives? 
@@ -175,7 +185,6 @@ function GameBoard(props) {
   function incrementPoints(){
     let p = 0;
     p = points + 1;
-    console.log('Increments score')
     return(setPoints(p));
   }
   
@@ -215,23 +224,27 @@ function GameBoard(props) {
     if (x === 8 && ((y < height - 2 && y > height - 6) || (y === height - 7))){
       return true
     }
-    if (x === 10 && y < height - 2 && y > height - 9){
+    if (x === 10 && y < height - 2 && y > height - 9){ 
       return true
     }
-
     return false
+
   }
 
-  const determineElements = (x, y) => {
+  // write a function that determines if a cheese in the array rows is eaten or not 
+  const determineElements = (rows, x, y) => {
     if (x === playerCoords.x && y === playerCoords.y) {
+      updateCellValue(rows,x,y,'rat')
       return <Rat open={open}/>
     }
     if (isBrick(x, y)) {
+      updateCellValue(rows,x,y,'brick')
       return <Brick/>
     }
-    /*if(hiddenCheese.hidden === true && x === hiddenCheese.x && y === hiddenCheese.y){
+    if(isCheeseEaten(rows,x,y)){
       return;
-    }*/
+    }
+    updateCellValue(rows,x,y,'cheese')
     return <Cheese/>
   }
 
@@ -267,7 +280,7 @@ function GameBoard(props) {
         <div key={y} className="row" style={{ }}>
           {cells.map(({ x, y }) => (
             <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-              {determineElements(x,y)}
+              {determineElements(rows, x,y)}
               
             </div>
           ))}
