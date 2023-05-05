@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+//import { useNavigation } from 'react-router-dom';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
 
+import BackgroundMusic from './BackgroundMusic'
+
 function GameBoard(props) {
-  const rows = [];
-  console.log(props)
+  const [rows,setRows] = useState([]);
   const { width, height } = props;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0); 
+
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
     switch (e.key) {
@@ -70,7 +72,6 @@ function GameBoard(props) {
         break
     }
   }
-
   // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress)
@@ -87,6 +88,7 @@ function GameBoard(props) {
     }, 200)
   }, [open])
   //setTimeout(() => setOpen(!open), 500)
+  
 
 // Creates a game board with cells as a matrice
   // Cell value indicates type of cell 
@@ -196,7 +198,8 @@ function isCheeseEaten(rows,x,y){
     console.log('Decrements score')
     return(setPoints(p));
   }
-
+  
+  // Checks if a cell is a brick 
   const isBrick = (x, y) => {
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
       return true
@@ -222,71 +225,71 @@ function isCheeseEaten(rows,x,y){
     if (x === 8 && ((y < height - 2 && y > height - 6) || (y === height - 7))){
       return true
     }
-    if (x === 10 && y < height - 2 && y > height - 9){
+    if (x === 10 && y < height - 2 && y > height - 9){ 
       return true
     }
-
     return false
+
   }
 
-// Determines what type of elements are in each cell 
-const determineElements = (rows, x, y) => {
-  if (x === playerCoords.x && y === playerCoords.y) {
-    updateCellValue(rows,x,y,'rat')
-    return <Rat open={open}/>
+  // Determines what type of elements are in each cell 
+  const determineElements = (rows, x, y) => {
+    if (x === playerCoords.x && y === playerCoords.y) {
+      updateCellValue(rows,x,y,'rat')
+      return <Rat open={open}/>
+    }
+    if (isBrick(x, y)) {
+      updateCellValue(rows,x,y,'brick')
+      return <Brick/>
+    }
+    if(isCheeseEaten(rows,x,y)){
+      return;
+    }
+    updateCellValue(rows,x,y,'cheese')
+    return <Cheese/>
   }
-  if (isBrick(x, y)) {
-    updateCellValue(rows,x,y,'brick')
-    return <Brick/>
-  }
-  if(isCheeseEaten(rows,x,y)){
-    return;
-  }
-  updateCellValue(rows,x,y,'cheese')
-  return <Cheese/>
-}
 
-return (
-  <>
-  <BackgroundMusic/>
-<div className='body' style={{flexDirection:'row', fontSize:30}}>
-  <form onSubmit={navTutorial}>
-    {'Score: '}{points}
-    <button
-      style={{
-        backgroundColor:'black',
-        color:'white',
-        fontSize:20,
-        width:200,
-        height:50, 
-        borderRadius:15, 
-        margin:10,
-        marginLeft:400,
-        fontWeight:'bold'
-      }}
-      type='submit'>
-        Tutorial
-      </button>
-    </form>
+    
+    return (
+      <>
+      <BackgroundMusic/>
+    <div className='body' style={{flexDirection:'row', fontSize:30}}>
+      <form onSubmit={navTutorial}>
+        {'Score: '}{points}
+        <button
+          style={{
+            backgroundColor:'black',
+            color:'white',
+            fontSize:20,
+            width:200,
+            height:50, 
+            borderRadius:15, 
+            margin:10,
+            marginLeft:400,
+            fontWeight:'bold'
+          }}
+          type='submit'>
+            Tutorial
+          </button>
+        </form>
+        </div>
+        <div>
+      
     </div>
-    <div>
-  
-</div>
-<div className="game-board" style={{backgroundColor: 'gray' }}>
-  {rows.map((cells, y) => (
-    <div key={y} className="row" style={{ }}>
-      {cells.map(({ x, y }) => (
-        <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-          {determineElements(rows, x,y)}
-          
+    <div className="game-board" style={{backgroundColor: 'gray' }}>
+      {rows.map((cells, y) => (
+        <div key={y} className="row" style={{ }}>
+          {cells.map(({ x, y }) => (
+            <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
+              {determineElements(rows, x,y)}
+              
+            </div>
+          ))}
         </div>
       ))}
     </div>
-  ))}
-</div>
-</>
-);
+    </>
+  );
 }
 
 export default GameBoard;
-

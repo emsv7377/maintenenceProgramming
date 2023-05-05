@@ -1,16 +1,25 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import './App.css'
-import GameBoard from './GameBoard'
+import GameBoard from './components/GameBoard'
+import StartScreen from './screens/StartScreen'
+import Settings from './screens/Settings'
+import Tutorial from './screens/Tutorial'
+import Game from './screens/Game'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      <h1>Rat-Man</h1>
-      <GameBoard width={13} height={11}/>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<StartScreen/>} />
+            <Route path='/GameBoard' element={<GameBoard width={13} height={11} />}/>
+            <Route path='Settings' element={<Settings/>}/>
+            <Route path='Tutorial' element={<Tutorial/>}/>
+        </Routes>
+        </BrowserRouter>
     </div>
   )
 }
