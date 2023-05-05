@@ -10,9 +10,9 @@ function GameBoard(props) {
   const rows = [];
   const { width, height } = props;
   //console.log(props)
-  const [position, setPosition] = useState({ x: 1, y: 1 });
+  //const [position, setPosition] = useState({ x: 1, y: 1 });
   // Ratmans position
-  Rat.position = position;
+  //Rat.position = position;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
