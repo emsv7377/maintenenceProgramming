@@ -199,6 +199,7 @@ function isCheeseEaten(rows,x,y){
     return(setPoints(p));
   }
   
+  // Checks if a cell is a brick 
   const isBrick = (x, y) => {
     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) {
       return true
@@ -231,7 +232,7 @@ function isCheeseEaten(rows,x,y){
 
   }
 
-  // write a function that determines if a cheese in the array rows is eaten or not 
+  // Determines what type of elements are in each cell 
   const determineElements = (rows, x, y) => {
     if (x === playerCoords.x && y === playerCoords.y) {
       updateCellValue(rows,x,y,'rat')
