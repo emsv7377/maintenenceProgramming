@@ -13,14 +13,14 @@ function StartScreen() {
    }
 
    function navTutorial(event){
-    event.preventDefault();
-    navigate('Tutorial')
-}
+        event.preventDefault();
+        navigate('Tutorial')
+    }
 
-function navSettings(event){
-    event.preventDefault();
-    navigate('Settings')
-}
+    function navSettings(event){
+        event.preventDefault();
+        navigate('Settings')
+    }
 
    return(
         <div className='body'>

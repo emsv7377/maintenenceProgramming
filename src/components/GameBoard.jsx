@@ -142,7 +142,7 @@ function GameBoard(props) {
  */
 function isCheeseEaten(rows,x,y){
   let cell = rows[y][x]
-  if (cell && cell.cellValue === 'empty'){
+  if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
     return true;
   }
   return false;
