@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import GameBoard from '../components/GameBoard'
 import pacman from '../assets/pacman.png'
 import index from '../index.css?inline';
+import Rat from '../components/Rat';
+import Cheese from '../components/Cheese';
 
 function StartScreen() {
    const navigate = useNavigate();
@@ -25,15 +27,10 @@ function StartScreen() {
    return(
         <div className='body'>
             <h1>Welcome to Rat-Man</h1>
-                <h3> ~Add picture of Rat-Man here~ 
-                </h3>
-                    <img 
-                        src={pacman} 
-                        height={200} 
-                        width={200} 
-                        alt='Pacman' 
-                        style={{marginBottom:40}}
-                    />
+            <div className='row'
+                style={{height:'20%',width:'20%'}}>
+                        <Rat open={close}/><Cheese/>
+                    </div>
                     <form onSubmit={navGameBoard}>
                         <button 
                         style={styles}
