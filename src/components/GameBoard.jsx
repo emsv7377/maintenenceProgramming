@@ -236,7 +236,7 @@ function isCheeseEaten(rows,x,y){
   const determineElements = (rows, x, y) => {
     if (x === playerCoords.x && y === playerCoords.y) {
       updateCellValue(rows,x,y,'rat')
-      return <Rat open={open}/>
+      return <Rat open={open} direction={direction}/>
     }
     if (isBrick(x, y)) {
       updateCellValue(rows,x,y,'brick')
