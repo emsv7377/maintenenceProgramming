@@ -27,6 +27,7 @@ function StartScreen(){
         event.preventDefault();
         navigate('Settings')
     }
+    
 
     return(
         <div className='body'>
@@ -39,21 +40,21 @@ function StartScreen(){
                     <button 
                         style={styles}
                         type='submit'>
-                            {language.buttonComponent.buttonText}
+                            {language.startButton.buttonText}
                         </button>
                     </form>
                     <form onSubmit={navTutorial}>
                         <button 
                         style={styles}
                             type='submit'>
-                                Tutorial
+                                {language.tutorialButton.buttonText}
                         </button>
                     </form>
                     <form onSubmit={navSettings}>
                         <button 
                         style={styles}
                             type='submit'>
-                                Settings
+                                {language.settingsButton.buttonText}
                         </button>
                     </form>
             </div>

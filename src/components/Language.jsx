@@ -1,19 +1,37 @@
 export const ENG = {
-    language: 'English',
-    buttonComponent:{
+    language: 'eng',
+    startButton:{
         buttonText: 'Start game'
     }, 
+    tutorialButton:{
+        buttonText: 'How to play'
+    },
+    settingsButton:{
+        buttonText:'Settings'
+    },
     headerComponent:{
         titleText:'Welcome to RatMan'
+    },
+    choosenLang:{
+        titleText:'English'
     }
 }
 
 export const SWE = {
-    language: 'Svenska',
-    buttonComponent:{
+    language: 'swe',
+    startButton:{
         buttonText:'Starta spelet'
+    },
+    tutorialButton:{
+        buttonText: 'Såhär spelar du'
+    },
+    settingsButton:{
+        buttonText: 'Inställningar'
     },
     headerComponent:{
         titleText:'Välkommen till RatMan'
+    },
+    choosenLang:{
+        titleText:'Svenska'
     }
 }
