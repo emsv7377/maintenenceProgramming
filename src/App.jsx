@@ -8,11 +8,11 @@ import Settings from './screens/Settings'
 import Tutorial from './screens/Tutorial'
 import Game from './screens/Game'
 
-import { UK } from 'country-flag-icons/'
-import { SWE } from 'country-flag-icons/'
 import { ENG, SVE } from './components/Language'
 import LanguageContext from './components/LanguageContext';
 
+import sweflag from './assets/sweflag.png'
+import ukflag from './assets/ukflag.png'
 
 function App() {
 
@@ -35,13 +35,15 @@ function App() {
   return (
     <div className="App">
       <span>
-        {language.choosenLang.titleText}: 
-        <UK
-          className='flag us'
-          onClick={() => onLanguageChange('eng')}/>
-          <SWE
-          className='flag swe'
-          onClick={() => onLanguageChange('sve')}/>
+        Språk
+          <button
+            onClick={() => onLanguageChange('eng')}>
+            eng
+          </button>
+          <button
+            onClick={() => onLanguageChange('sve')}>
+            swe
+            </button>
         </span>
         <LanguageContext.Provider value={language.language}>
 

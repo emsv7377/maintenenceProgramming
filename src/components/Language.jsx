@@ -17,8 +17,8 @@ export const ENG = {
     }
 }
 
-export const SWE = {
-    language: 'swe',
+export const SVE = {
+    language: 'sve',
     startButton:{
         buttonText:'Starta spelet'
     },
