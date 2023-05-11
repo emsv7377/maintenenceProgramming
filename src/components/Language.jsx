@@ -1,5 +1,5 @@
 export const ENG = {
-    language: 'eng',
+    language: 'english',
     startButton:{
         buttonText: 'Start game'
     }, 
@@ -18,7 +18,7 @@ export const ENG = {
 }
 
 export const SVE = {
-    language: 'sve',
+    language: 'swedish',
     startButton:{
         buttonText:'Starta spelet'
     },

@@ -20,14 +20,16 @@ function App() {
 
   const onLanguageChange = language => {
     let newLang = {};
-    // 
     switch(language){
       case 'eng':
-        newLang = 'ENG';
+        newLang = ENG;
+        break;
       case 'sve':
-        newLang = 'SVE';
-      default:
         newLang = SVE;
+        break;
+      default:
+        newLang = ENG;
+        break;
     }
     setLanguage({ language: newLang })
   }
@@ -35,14 +37,22 @@ function App() {
   return (
     <div className="App">
       <span>
-        Språk
           <button
+            style={{backgroundColor:'white'}}
             onClick={() => onLanguageChange('eng')}>
-            eng
+              <img
+                src={ukflag}
+                width={30}
+                height={30}
+                />
           </button>
           <button
+          style={{backgroundColor:'white'}}
             onClick={() => onLanguageChange('sve')}>
-            swe
+              <img
+                src={sweflag}
+                width={30}
+                height={30}/>
             </button>
         </span>
         <LanguageContext.Provider value={language.language}>
