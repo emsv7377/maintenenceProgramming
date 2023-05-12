@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 //import GameBoard from '../components/GameBoard'
 //import pacman from '../assets/pacman.png'
@@ -9,8 +9,16 @@ import Cheese from '../components/Cheese';
 import LanguageContext from '../components/LanguageContext'
 
 function StartScreen(){
+    const [open, setOpen] = useState(false);
     const language = useContext(LanguageContext);
     const navigate = useNavigate();
+
+    // Animates rat 
+    useEffect(() => {
+        setTimeout(() => {
+          setOpen(!open)
+        }, 200)
+      }, [open])
 
     // Navigates to Gameboard 
     function navGameBoard(event){
@@ -34,7 +42,7 @@ function StartScreen(){
             <h1>{language.headerComponent.titleText}</h1>
                 <div className='row'
                     style={{height:'20%',width:'20%'}}>
-                        <Rat open={close}/><Cheese/>
+                        <Rat open={open}/><Cheese/>
                 </div>
                 <form onSubmit={navGameBoard}>
                     <button 
