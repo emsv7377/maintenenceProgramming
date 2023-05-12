@@ -14,7 +14,6 @@ function GameBoard(props) {
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // state for player's score 
   const language = useContext(LanguageContext); // state for current language 
-
   const [playChew] = useSound(chew, {volume:0.2}); // state for sound effect: eatCheese
 
   // sets direction state according to keyboard input
@@ -84,7 +83,7 @@ function GameBoard(props) {
 
   // change open state and player coordinates every 300 ms.
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(() => { 
       setOpen(!open)
       move()
     }, 200)
@@ -107,10 +106,6 @@ function GameBoard(props) {
     setRows(blankRows);
   },[]);
  
-  // Navigates to the tutorial
-  function navTutorial(){
-    console.log('Tutorial not implemented')
-  }
    
 /**
  * Updates the cellValue parameter of a chosen cell in the array rows 
@@ -164,6 +159,7 @@ function isCheeseEaten(rows,x,y){
       incrementPoints()
       // Update cell value that it is empty 
       updateCellValue(rows,x,y,'empty')
+      // Plays sound effect 
       playChew();
       // Return the updated game board 
       return rows;
