@@ -255,30 +255,10 @@ function isCheeseEaten(rows,x,y){
     <div className='body' style={{
       flexDirection:'row', 
       justifyContent:'space-evenly',
-      fontSize:25, 
+      fontSize:30, 
       fontWeight:'bold'}}>
       
-      <form onSubmit={navTutorial}>
-      <BackgroundMusic/>
       {language.score.titleText}{points}
-        
-        <button
-          style={{
-            backgroundColor:'black',
-            color:'white',
-            fontSize:20,
-            width:200,
-            height:50, 
-            borderRadius:15, 
-            margin:10,
-            marginLeft:400,
-            fontWeight:'bold'
-          }}
-          type='submit'>
-            {language.tutorialButton.buttonText}
-          </button>
-          
-        </form>
         </div>
         <div>
       

@@ -14,6 +14,7 @@ import LanguageContext from './components/LanguageContext';
 import sweflag from './assets/sweflag.png'
 import ukflag from './assets/ukflag.png'
 import btnHelp from './assets/btnHelp.png'
+import BackgroundMusic from './components/BackgroundMusic';
 
 function App() {
 
@@ -79,6 +80,7 @@ function App() {
                 height={30}
               />
             </button>
+            <BackgroundMusic></BackgroundMusic>
             </span>
             </div>  
     )

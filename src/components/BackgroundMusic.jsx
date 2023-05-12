@@ -29,10 +29,9 @@ function BackgroundMusic(){
         if(isPlaying){
             return(
                 <img
-                    
                     src={btnStop}
-                    width={20}
-                    height={20}/>
+                    width={30}
+                    height={30}/>
             )
         }
         else {
@@ -48,7 +47,7 @@ function BackgroundMusic(){
     return(
        <button 
             style={{
-                backgroundColor:'white', 
+                backgroundColor:'white',
                 }}
             onClick={() => togglePlay()}>
             {renderPlayIcon()}
