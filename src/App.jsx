@@ -34,11 +34,26 @@ function App() {
     setLanguage({ language: newLang })
   }
 
-  return (
-    <div className="App">
-      <span>
+  const btnStyle = {
+    backgroundColor:'white',
+  }
+
+  function topMenu(){
+    return(
+      <div class='top-menu'>
+
+      </div>
+    )
+
+  }
+
+  /** Returns a top menu with language choices  */
+  function topMenu(){
+    return(
+      <div className="top-menu">
+        <span>
           <button
-            style={{backgroundColor:'white'}}
+            style={btnStyle}
             onClick={() => onLanguageChange('eng')}>
               <img
                 src={ukflag}
@@ -47,16 +62,23 @@ function App() {
                 />
           </button>
           <button
-          style={{backgroundColor:'white'}}
+          style={btnStyle}
             onClick={() => onLanguageChange('sve')}>
               <img
                 src={sweflag}
                 width={30}
                 height={30}/>
             </button>
-        </span>
-        <LanguageContext.Provider value={language.language}>
+            </span>
+            </div>
+        
+    )
+  }
 
+  return (
+    <div className="App">
+      {topMenu()}
+        <LanguageContext.Provider value={language.language}>
           <BrowserRouter>
             <Routes>
               <Route path='/' element={<StartScreen/>} />
