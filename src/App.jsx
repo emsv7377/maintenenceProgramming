@@ -6,11 +6,8 @@ import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
 import Settings from './screens/Settings'
 import Tutorial from './screens/Tutorial'
-import Game from './screens/Game'
-
 import { ENG, SVE } from './components/Language'
 import LanguageContext from './components/LanguageContext';
-
 import sweflag from './assets/sweflag.png'
 import ukflag from './assets/ukflag.png'
 import btnHelp from './assets/btnHelp.png'
@@ -18,8 +15,9 @@ import BackgroundMusic from './components/BackgroundMusic';
 
 function App() {
 
-  const [language,setLanguage] = useState({ language: ENG });
+  const [language,setLanguage] = useState({ language: ENG }); // State for language, default english
 
+  // Handles language changes 
   const onLanguageChange = language => {
     let newLang = {};
     switch(language){
@@ -36,11 +34,13 @@ function App() {
     setLanguage({ language: newLang })
   }
 
+  // Style of buttons in top menu
   const btnStyle = {
     backgroundColor:'white',
   }
 
-  /** Returns a top menu with language choices  */
+  // Creates a top menu
+  // TODO: Rearrange the help button and music button 
   function topMenu(){
     return(
       <div className="top-menu">

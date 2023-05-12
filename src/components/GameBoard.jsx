@@ -248,32 +248,27 @@ function isCheeseEaten(rows,x,y){
     return <Cheese/>
   }
 
-    
     return (
       <>
-    <div className='body' style={{
-      flexDirection:'row', 
-      justifyContent:'space-evenly',
-      fontSize:30, 
-      fontWeight:'bold'}}>
-      
-      {language.score.titleText}{points}
+        <div className='body' 
+          style={{
+            flexDirection:'row', 
+            justifyContent:'space-evenly',
+            fontSize:30, 
+            fontWeight:'bold'}}>
+            {language.score.titleText}{points}
         </div>
-        <div>
-      
-    </div>
-    <div className="game-board" style={{backgroundColor: 'gray' }}>
-      {rows.map((cells, y) => (
-        <div key={y} className="row" style={{ }}>
-          {cells.map(({ x, y }) => (
-            <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-              {determineElements(rows, x,y)}
-              
+        <div className="game-board" style={{backgroundColor: 'gray' }}>
+          {rows.map((cells, y) => (
+            <div key={y} className="row" style={{ }}>
+              {cells.map(({ x, y }) => (
+                <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
+                  {determineElements(rows, x,y)}
+                </div>
+              ))}
             </div>
           ))}
         </div>
-      ))}
-    </div>
     </>
   );
 }
