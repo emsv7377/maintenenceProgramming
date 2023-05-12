@@ -14,6 +14,9 @@ export const ENG = {
     },
     choosenLang:{
         titleText:'English'
+    },
+    score:{
+        titleText: 'Score: '
     }
 }
 
@@ -33,5 +36,5 @@ export const SVE = {
     },
     choosenLang:{
         titleText:'Svenska'
-    }
+    },
 }

@@ -13,6 +13,7 @@ import LanguageContext from './components/LanguageContext';
 
 import sweflag from './assets/sweflag.png'
 import ukflag from './assets/ukflag.png'
+import btnHelp from './assets/btnHelp.png'
 
 function App() {
 
@@ -69,9 +70,17 @@ function App() {
                 width={30}
                 height={30}/>
             </button>
+          <button
+            style={btnStyle}
+            onClick={() => console.log('implement tutorial')}>
+              <img
+                src={btnHelp}
+                width={30}
+                height={30}
+              />
+            </button>
             </span>
-            </div>
-        
+            </div>  
     )
   }
 

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-//import { useNavigation } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
+import BackgroundMusic from './BackgroundMusic';
+import LanguageContext from './LanguageContext';
 
-import BackgroundMusic from './BackgroundMusic'
 
 function GameBoard(props) {
   const [rows,setRows] = useState([]);
@@ -12,7 +12,8 @@ function GameBoard(props) {
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
-  const [points, setPoints] = useState(0); 
+  const [points, setPoints] = useState(0);  // state for player's score 
+  const language = useContext(LanguageContext); // state for current language 
 
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
@@ -39,8 +40,7 @@ function GameBoard(props) {
   // moves player according to direction state
   const move = () => {
     let newCoords = {}
-    
-
+  
     switch (direction) {
       case 'r':
         newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
@@ -252,10 +252,16 @@ function isCheeseEaten(rows,x,y){
     
     return (
       <>
-      <BackgroundMusic/>
-    <div className='body' style={{flexDirection:'row', fontSize:30}}>
+    <div className='body' style={{
+      flexDirection:'row', 
+      justifyContent:'space-evenly',
+      fontSize:25, 
+      fontWeight:'bold'}}>
+      
       <form onSubmit={navTutorial}>
-        {'Score: '}{points}
+      <BackgroundMusic/>
+      {language.score.titleText}{points}
+        
         <button
           style={{
             backgroundColor:'black',
@@ -269,8 +275,9 @@ function isCheeseEaten(rows,x,y){
             fontWeight:'bold'
           }}
           type='submit'>
-            Tutorial
+            {language.tutorialButton.buttonText}
           </button>
+          
         </form>
         </div>
         <div>
