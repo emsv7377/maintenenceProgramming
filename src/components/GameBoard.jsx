@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
+import Cat from './Cat';
 import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
@@ -14,27 +15,32 @@ function GameBoard(props) {
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // state for player's score 
   const language = useContext(LanguageContext); // state for current language 
-  const [playChew] = useSound(chew, {volume:0.2}); // state for sound effect: eatCheese
+
+  // TODO: change to volume: 0.1 or 0.2 debugging done
+  const [playChew] = useSound(chew, {volume:0}); // state for sound effect: eatCheese
+
+  const [gameOver, setGameOver] = useState(false);  // state for game over
+  const [catPosition, setCatPosition] = useState({})
 
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
     switch (e.key) {
       case 'w':
-      case 'ArrowUp':
-        setDirection('u')
-        break
-      case 'a':
-      case 'ArrowLeft':
-        setDirection('l')
-        break
-      case 's':
-      case 'ArrowDown':
-        setDirection('d')
-        break
-      case 'd':
-      case 'ArrowRight':
-        setDirection('r')
-        break
+        case 'ArrowUp':
+          setDirection('u')
+          break
+          case 'a':
+            case 'ArrowLeft':
+              setDirection('l')
+              break
+              case 's':
+                case 'ArrowDown':
+                  setDirection('d')
+                  break
+                  case 'd':
+                    case 'ArrowRight':
+                      setDirection('r')
+                      break
     }
   }
 
@@ -72,6 +78,7 @@ function GameBoard(props) {
         }
         break
     }
+    setCatPosition({x:7,y:5});
   }
   // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
@@ -231,8 +238,14 @@ function isCheeseEaten(rows,x,y){
 
   }
 
+
+
+
   // Determines what type of elements are in each cell 
   const determineElements = (rows, x, y) => {
+    if(x === 7 && y === 5){
+      return <Cat/>
+    }
     if (x === playerCoords.x && y === playerCoords.y) {
       updateCellValue(rows,x,y,'rat')
       return <Rat open={open} direction={direction}/>
