@@ -2,18 +2,20 @@ import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
-import BackgroundMusic from './BackgroundMusic';
 import LanguageContext from './LanguageContext';
-
+import useSound from 'use-sound';
+import chew from './audio/chew.mp3'
 
 function GameBoard(props) {
-  const [rows,setRows] = useState([]);
+  const [rows,setRows] = useState([]); // state for gameboard 
   const { width, height } = props;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // state for player's score 
   const language = useContext(LanguageContext); // state for current language 
+
+  const [playChew] = useSound(chew, {volume:0.2}); // state for sound effect: eatCheese
 
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
@@ -162,6 +164,7 @@ function isCheeseEaten(rows,x,y){
       incrementPoints()
       // Update cell value that it is empty 
       updateCellValue(rows,x,y,'empty')
+      playChew();
       // Return the updated game board 
       return rows;
     } else {

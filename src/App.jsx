@@ -40,15 +40,6 @@ function App() {
     backgroundColor:'white',
   }
 
-  function topMenu(){
-    return(
-      <div class='top-menu'>
-
-      </div>
-    )
-
-  }
-
   /** Returns a top menu with language choices  */
   function topMenu(){
     return(
