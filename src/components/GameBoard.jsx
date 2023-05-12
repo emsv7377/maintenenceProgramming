@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-//import { useNavigation } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
 import Rat from './Rat';
-
-import BackgroundMusic from './BackgroundMusic'
+import LanguageContext from './LanguageContext';
+import useSound from 'use-sound';
+import chew from './audio/chew.mp3'
 
 function GameBoard(props) {
-  const [rows,setRows] = useState([]);
+  const [rows,setRows] = useState([]); // state for gameboard 
   const { width, height } = props;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
-  const [points, setPoints] = useState(0); 
+  const [points, setPoints] = useState(0);  // state for player's score 
+  const language = useContext(LanguageContext); // state for current language 
+  const [playChew] = useSound(chew, {volume:0.2}); // state for sound effect: eatCheese
 
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
@@ -39,8 +41,7 @@ function GameBoard(props) {
   // moves player according to direction state
   const move = () => {
     let newCoords = {}
-    
-
+  
     switch (direction) {
       case 'r':
         newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
@@ -82,7 +83,7 @@ function GameBoard(props) {
 
   // change open state and player coordinates every 300 ms.
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(() => { 
       setOpen(!open)
       move()
     }, 200)
@@ -105,10 +106,6 @@ function GameBoard(props) {
     setRows(blankRows);
   },[]);
  
-  // Navigates to the tutorial
-  function navTutorial(){
-    console.log('Tutorial not implemented')
-  }
    
 /**
  * Updates the cellValue parameter of a chosen cell in the array rows 
@@ -162,6 +159,8 @@ function isCheeseEaten(rows,x,y){
       incrementPoints()
       // Update cell value that it is empty 
       updateCellValue(rows,x,y,'empty')
+      // Plays sound effect 
+      playChew();
       // Return the updated game board 
       return rows;
     } else {
@@ -252,26 +251,13 @@ function isCheeseEaten(rows,x,y){
     
     return (
       <>
-      <BackgroundMusic/>
-    <div className='body' style={{flexDirection:'row', fontSize:30}}>
-      <form onSubmit={navTutorial}>
-        {'Score: '}{points}
-        <button
-          style={{
-            backgroundColor:'black',
-            color:'white',
-            fontSize:20,
-            width:200,
-            height:50, 
-            borderRadius:15, 
-            margin:10,
-            marginLeft:400,
-            fontWeight:'bold'
-          }}
-          type='submit'>
-            Tutorial
-          </button>
-        </form>
+    <div className='body' style={{
+      flexDirection:'row', 
+      justifyContent:'space-evenly',
+      fontSize:30, 
+      fontWeight:'bold'}}>
+      
+      {language.score.titleText}{points}
         </div>
         <div>
       

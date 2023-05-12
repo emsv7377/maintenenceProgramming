@@ -13,6 +13,15 @@
   align-items: center;
 }
 
+/* language bar */
+.top-menu{
+  width:100%;
+  background-color: #fff;
+  overflow:auto;
+  height:20%;
+  display:flex;
+}
+
 
 .cell {
   display: flex;

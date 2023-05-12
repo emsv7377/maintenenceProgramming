@@ -1,55 +1,68 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
-import GameBoard from '../components/GameBoard'
-import pacman from '../assets/pacman.png'
-import index from '../index.css?inline';
+//import GameBoard from '../components/GameBoard'
+//import pacman from '../assets/pacman.png'
+//import index from '../index.css?inline';
 import Rat from '../components/Rat';
 import Cheese from '../components/Cheese';
 
-function StartScreen() {
-   const navigate = useNavigate();
+import LanguageContext from '../components/LanguageContext'
 
-   function navGameBoard(event){
+function StartScreen(){
+    const [open, setOpen] = useState(false);
+    const language = useContext(LanguageContext);
+    const navigate = useNavigate();
+
+    // Animates rat 
+    useEffect(() => {
+        setTimeout(() => {
+          setOpen(!open)
+        }, 200)
+      }, [open])
+
+    // Navigates to Gameboard 
+    function navGameBoard(event){
         event.preventDefault();
         navigate('GameBoard')
    }
-
+   // Navigates to the tutorial page 
    function navTutorial(event){
-        event.preventDefault();
-        navigate('Tutorial')
+    event.preventDefault();
+    navigate('Tutorial')
     }
-
+    // Navigates to settings page 
     function navSettings(event){
         event.preventDefault();
         navigate('Settings')
     }
+    
 
-   return(
+    return(
         <div className='body'>
-            <h1>Welcome to Rat-Man</h1>
-            <div className='row'
-                style={{height:'20%',width:'20%'}}>
-                        <Rat open={close}/><Cheese/>
-                    </div>
-                    <form onSubmit={navGameBoard}>
-                        <button 
+            <h1>{language.headerComponent.titleText}</h1>
+                <div className='row'
+                    style={{height:'20%',width:'20%'}}>
+                        <Rat open={open}/><Cheese/>
+                </div>
+                <form onSubmit={navGameBoard}>
+                    <button 
                         style={styles}
-                            type='submit'>
-                                Start new game
+                        type='submit'>
+                            {language.startButton.buttonText}
                         </button>
                     </form>
                     <form onSubmit={navTutorial}>
                         <button 
                         style={styles}
                             type='submit'>
-                                Tutorial
+                                {language.tutorialButton.buttonText}
                         </button>
                     </form>
                     <form onSubmit={navSettings}>
                         <button 
                         style={styles}
                             type='submit'>
-                                Settings
+                                {language.settingsButton.buttonText}
                         </button>
                     </form>
             </div>
