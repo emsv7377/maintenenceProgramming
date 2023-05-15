@@ -6,6 +6,8 @@ import Cat from './Cat';
 import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
+import GameOver from '../screens/GameOver';
+import { useNavigate } from 'react-router-dom';
 
 function GameBoard(props) {
   const [rows,setRows] = useState([]); // state for gameboard 
@@ -19,7 +21,7 @@ function GameBoard(props) {
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0}); // state for sound effect: eatCheese
 
-  const [gameOver, setGameOver] = useState(false);  // state for game over
+  const [isPlaying, setIsPlaying] = useState(true);  // state for game over
   const [catPosition, setCatPosition] = useState({x:1, y:8})
 
   // sets direction state according to keyboard input
@@ -194,6 +196,7 @@ function possibleMoves(catPosition){
   return newMoves;
 }
 
+
 /**
  * 
  * @param {*} min Minimum value 
@@ -267,7 +270,7 @@ function isCheeseEaten(rows,x,y){
    */
   function collision(){
     // TODO: collision, decrement lives? 
-    setGameOver(true);
+    setIsPlaying(false);
   }
 
   /**
@@ -335,7 +338,7 @@ function isCheeseEaten(rows,x,y){
       return <Cat/>
     }
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
-      collision();
+      console.log('collision - game over');
     }
     if (x === playerCoords.x && y === playerCoords.y) {
       updateCellValue(rows,x,y,'rat')
@@ -353,7 +356,11 @@ function isCheeseEaten(rows,x,y){
   }
 
     return (
-      <>
+      
+      <> 
+      { isPlaying ?  
+        null
+       : <GameOver></GameOver>};
         <div className='body' 
           style={{
             flexDirection:'row', 
@@ -372,7 +379,7 @@ function isCheeseEaten(rows,x,y){
               ))}
             </div>
           ))}
-        </div>
+        </div> 
     </>
   );
 }
