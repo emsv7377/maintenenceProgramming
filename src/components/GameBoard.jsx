@@ -20,7 +20,7 @@ function GameBoard(props) {
   const [playChew] = useSound(chew, {volume:0}); // state for sound effect: eatCheese
 
   const [gameOver, setGameOver] = useState(false);  // state for game over
-  const [catPosition, setCatPosition] = useState({})
+  const [catPosition, setCatPosition] = useState({x:1, y:8})
 
   // sets direction state according to keyboard input
   const handleKeyPress = (e) => {
@@ -54,6 +54,7 @@ function GameBoard(props) {
         if (!isBrick(newCoords.x, newCoords.y)) {
           setPlayerCoords(newCoords)
           eatCheese(rows,newCoords.x,newCoords.y)
+          moveCat(catPosition)
         }
         break
       case 'l':
@@ -61,6 +62,7 @@ function GameBoard(props) {
         if (!isBrick(newCoords.x, newCoords.y)){
           setPlayerCoords(newCoords)
           eatCheese(rows,newCoords.x,newCoords.y)
+          moveCat(catPosition)
         }
         break
       case 'u':
@@ -68,6 +70,7 @@ function GameBoard(props) {
         if (!isBrick(newCoords.x, newCoords.y)) {
           setPlayerCoords(newCoords)
           eatCheese(rows,newCoords.x,newCoords.y)
+          moveCat(catPosition)
         }       
         break
       case 'd':
@@ -75,10 +78,11 @@ function GameBoard(props) {
         if (!isBrick(newCoords.x, newCoords.y)) {
           setPlayerCoords(newCoords)
           eatCheese(rows,newCoords.x,newCoords.y)
+          moveCat(catPosition)
         }
+
         break
     }
-    setCatPosition({x:7,y:5});
   }
   // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
@@ -123,7 +127,6 @@ function GameBoard(props) {
  * @returns The updated rows array  
  */
  function updateCellValue(rows, x, y, newValue){
-  // Find index of the current coordinates in the array rows 
   if(rows[y]){
     let cell = rows[y][x];
     if(cell){
@@ -135,6 +138,88 @@ function GameBoard(props) {
       }
     return rows;
  }
+}
+
+/**
+ * Checks adjacent cells from cat's current position 
+ * @param {*} catPosition Position of cat 
+ * @returns All adjacent cells 
+ */
+function adjacentCells(catPosition){
+  let adjCells = {}
+
+  if(catPosition.x === 0 && catPosition.y !== 0){
+    adjCells = [
+      { x: (catPosition.x + 1), y: catPosition.y },
+      { x: catPosition.x, y: (catPosition.y + 1) }, 
+      { x: catPosition.x, y: (catPosition.y - 1) }
+    ]
+  }
+  else if (catPosition.y === 0 && catPosition.x !== 0){
+    adjCells = [
+      { x: catPosition.x, y: (catPosition.y + 1) }, 
+      { x: (catPosition.x + 1), y: catPosition.y }, 
+      { x: (catPosition.x - 1), y: catPosition.y }
+    ]
+  } else if (catPosition.x === 0 && catPosition.y === 0){
+    adjCells = [
+      { x: (catPosition.x + 1), y: catPosition.y }, 
+      { x: catPosition.x, y: (catPosition.y + 1) }
+    ]
+  } else {
+    adjCells = [
+      { x: (catPosition.x + 1), y: catPosition.y },
+      { x: (catPosition.x - 1), y: catPosition.y },
+      { x: catPosition.x, y: (catPosition.y + 1) },
+      { x: catPosition.x, y: (catPosition.y - 1) }
+    ]
+  }
+  return adjCells;
+}
+
+/**
+ * Checks adjacent cells to cat position 
+ * @param {*} adjCells Adjacent cells on the current position 
+ * @returns Possible moves for cat 
+ */
+function possibleMoves(catPosition){
+  let adjCells = adjacentCells(catPosition);
+  let newMoves = []
+  for(let i = 0; i < adjCells.length; i ++){
+    if(!isBrick(adjCells[i].x, adjCells[i].y)){
+      let cell = ({ x: adjCells[i].x, y: adjCells[i].y });
+      newMoves.push(cell);
+    }
+  }
+  return newMoves;
+}
+
+/**
+ * 
+ * @param {*} min Minimum value 
+ * @param {*} max Maximum value 
+ * @returns Random integer between min and max 
+ */
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}
+
+/**
+ * Moves the cat to a new adjacent cell, choice done randomly  
+ * @param {*} catPosition 
+ */
+function moveCat(catPosition){
+  let moves = possibleMoves(catPosition);
+  let min = 0; 
+  let max = (moves.length);
+  // Randomize choice of next move
+  let randNum = getRandomInt(min,max)
+
+  let nextMove = moves[randNum];
+  setCatPosition(nextMove);
+
 }
 
 /**
@@ -161,6 +246,7 @@ function isCheeseEaten(rows,x,y){
  */
   function eatCheese(rows, x,y){
     let cell = rows[y][x]
+    console.log('cell.cellvalue', cell.cellValue)
     if(cell && !isCheeseEaten(rows,x,y)){
       // Increment score by one
       incrementPoints()
@@ -181,7 +267,7 @@ function isCheeseEaten(rows,x,y){
    */
   function collision(){
     // TODO: collision, decrement lives? 
-    decrementPoints();
+    setGameOver(true);
   }
 
   /**
@@ -243,8 +329,13 @@ function isCheeseEaten(rows,x,y){
 
   // Determines what type of elements are in each cell 
   const determineElements = (rows, x, y) => {
-    if(x === 7 && y === 5){
+    if(x === catPosition.x && y === catPosition.y){
+      //console.log('Cat pos: ', catPosition.x, catPosition.y)
+      updateCellValue(rows,x,y,'cat')
       return <Cat/>
+    }
+    if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+      collision();
     }
     if (x === playerCoords.x && y === playerCoords.y) {
       updateCellValue(rows,x,y,'rat')

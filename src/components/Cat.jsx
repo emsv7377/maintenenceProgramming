@@ -1,11 +1,12 @@
+import kitty from '../assets/cat.png'
+
 function Cat() {
     return (
-        <>
-        <div  
-            style={{fontSize:20, fontWeight:'bold', fontColor:'white'}}>
-            Cat
-        </div>
-        </>
+        <img
+            src={kitty}
+            width={50}
+            height={50}
+        />
     )
 
 }
