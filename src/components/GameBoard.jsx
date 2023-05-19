@@ -210,13 +210,14 @@ function possibleMoves(catPosition){
   return newMoves;
 }
 
-// Generates a random int within the interval of variables min and max 
+// Function that generates a random int based on the length of an array 
 // 
 function getRandomInt(arrayLength) {
   return Math.floor(Math.random() * (arrayLength)); 
 }
 
-// Moves the cat to a new adjacent cell, which is chosen randomly 
+// Function that moves the cat to a new adjacent cell, 
+// which is chosen randomly 
 // 
 function moveCat(catPosition){
   // First calculate pssible moves 
@@ -229,15 +230,11 @@ function moveCat(catPosition){
   setCatPosition(nextMove);
 }
 
-/**
- * Checks if the cheese of a cell is eaten 
- * @param {*} gameboard The game board
- * @param {*} x X coordinate of the cell
- * @param {*} y Y coordinate of the cell 
- * @returns true if cell is empty, false otherwise 
- */
+
+// Function that checks if the cheese of a cell is eaten
 function isCheeseEaten(gameboard,x,y){
   let cell = gameboard[y][x]
+  // If cell value is empty or rat, then the cheese is eaten 
   if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
     return true;
   }
@@ -251,46 +248,49 @@ function isCheeseEaten(gameboard,x,y){
  * @param {*} y The y coordinate of the cell 
  * @returns the updated game board 
  */
-  function eatCheese(gameboard, x,y){
+// Function that handles eating cheese from the board 
+// 
+  function eatCheese(gameboard, x, y){
+    // The actual cell 
     let cell = gameboard[y][x]
-    console.log('cell.cellvalue', cell.cellValue)
+    // Check if cell exists and if the cheese has been eaten 
     if(cell && !isCheeseEaten(gameboard,x,y)){
-      // Increment score by one
+      // If not, increment score by one
       incrementPoints()
-      // Update cell value that it is empty 
+      // Update cell value to empty 
       updateCellValue(gameboard,x,y,'empty')
-      // Plays sound effect 
+      // Plays sound effect when eating
       playChew();
       // Return the updated game board 
       return gameboard;
     } else {
-      console.log('already eaten')
-    // Return updated game board
+    // Return game board as is
       return gameboard;
   }
 }
-  /**
-   * Decrement lives of player or points? 
-   */
+  
+  // Function that handles collision between the rat and the cat 
+  // 
+  // TODO: Implement game over-screen, handle collision 
   function collision(){
     // TODO: collision, decrement lives? 
     setIsPlaying(false);
   }
 
-  /**
-   * Increments point counter by one 
-   * @returns the incremented point counter
-   */
+  // Function that increments point counter by one 
+  // 
   function incrementPoints(){
     let p = 0;
+    // Calculate previous value of point and put it into the new variable p
     p = points + 1;
+    // Set point score to the new value of p 
     return(setPoints(p));
   }
   
-  /**
-   * Decrements point counter by one
-   * @returns The decremented point counter
-   */
+  // Function that decrements point counter by one 
+  // 
+  // TODO: Implement this when colliding with a Cat / Wall 
+  // to give player more chances than one? 
   function decrementPoints(){
     let p = 0;
     p = points - 1;
@@ -331,28 +331,45 @@ function isCheeseEaten(gameboard,x,y){
 
   }
 
-  // Determines what type of elements are in each cell 
+  // Determines what type of elements are in each cell
+  //  
   const determineElements = (gameboard, x, y) => {
+    // If cell is equal to the value of cat position the cat is placed there
     if(x === catPosition.x && y === catPosition.y){
-      //console.log('Cat pos: ', catPosition.x, catPosition.y)
+      // Update cell value to cat 
       updateCellValue(gameboard,x,y,'cat')
+      // Return the cat 
       return <Cat/>
     }
+    // If cat position is equal to the player position
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+      // The game is over 
+      // TODO: Implement collision handling 
       console.log('collision - game over');
     }
+    // If the cell is equal to the player coordinates, we place the rat there
     if (x === playerCoords.x && y === playerCoords.y) {
+      // Update cell value to rat
       updateCellValue(gameboard,x,y,'rat')
+      // Return the rat with state for open mouth and direction to enable animation
       return <Rat open={open} direction={direction}/>
     }
+    // If the cell is a brick 
     if (isBrick(x, y)) {
+      // Update cell value to brick 
       updateCellValue(gameboard,x,y,'brick')
+      // Return brick 
       return <Brick/>
     }
-    if(isCheeseEaten(gameboard,x,y)){
-      return;
+    // If the cell is not a brick 
+    if(!isBrick(x,y)){
+      // If cheese is eaten, return an empty cell 
+      if(isCheeseEaten(gameboard,x,y)) return;
     }
+    // Otherwise it is a cheese
+    // Update cell value to cheese 
     updateCellValue(gameboard,x,y,'cheese')
+    // Return the cheese 
     return <Cheese/>
   }
 
