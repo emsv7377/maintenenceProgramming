@@ -21,19 +21,19 @@ import { useNavigate } from 'react-router-dom';
 
 
 function GameBoard(props) {
-  const [gameboard,setGameboard] = useState([]); // state for gameboard 
+  const [gameboard,setGameboard] = useState([]); // State for gameboard 
   const { width, height } = props;
-  const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
-  const [open, setOpen] = useState(false) // state for Rat open or closed
+  const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // State for the player's position
+  const [open, setOpen] = useState(false) // State for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
-  const [points, setPoints] = useState(0);  // state for player's score 
-  const language = useContext(LanguageContext); // state for current language 
-
+  const [points, setPoints] = useState(0);  // State for player's score 
+  const language = useContext(LanguageContext); // State for current language 
+  
   // TODO: change to volume: 0.1 or 0.2 debugging done
-  const [playChew] = useSound(chew, {volume:0}); // state for sound effect: eatCheese
+  const [playChew] = useSound(chew, {volume:0}); // State for sound effect: eatCheese
 
-  const [isPlaying, setIsPlaying] = useState(true);  // state for game over
-  const [catPosition, setCatPosition] = useState({x:1, y:8})
+  const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
+  const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat 
 
   // Sets the Direction state according to keyboard input
   const handleKeyPress = (e) => {
@@ -156,37 +156,15 @@ useEffect(() => {
 // The adjacent cells are either to the left, right, up or down. 
 // 
 function adjacentCells(catPosition){
-  let adjCells = {}
-
-  // If Cat is positioned on the x-axis, we only have 3 possible adjacent cells
-  /*if(catPosition.x === 0 && catPosition.y !== 0){
-    console.log('x === 1 // 11')
+  let adjCells = {}    
     adjCells = [
+      // Cell to the right 
       { x: (catPosition.x + 1), y: catPosition.y },
-      { x: catPosition.x, y: (catPosition.y + 1) }, 
-      { x: catPosition.x, y: (catPosition.y - 1) }
-    ]
-  // If Cat is positioned on the y-axis, we only have 3 possible adjacent cells 
-  } else if (catPosition.y === 1 && catPosition.x !== 1){
-    console.log('y === 1')
-    adjCells = [
-      { x: catPosition.x, y: (catPosition.y + 1) }, 
-      { x: (catPosition.x + 1), y: catPosition.y }, 
-      { x: (catPosition.x - 1), y: catPosition.y }
-    ]
-  // If Cat is positioned 
-  } else if (catPosition.x === 1 && catPosition.y === 1 || catPosition.x === 11 && catPosition.y === 11 || ){
-    console.log('x === 1 && y === 1')
-    adjCells = [
-      { x: (catPosition.x + 1), y: catPosition.y }, 
-      { x: catPosition.x, y: (catPosition.y + 1) }
-    ]
-  } else {*/
-    
-    adjCells = [
-      { x: (catPosition.x + 1), y: catPosition.y },
+      // Cell to the left  
       { x: (catPosition.x - 1), y: catPosition.y },
+      // Cell above 
       { x: catPosition.x, y: (catPosition.y + 1) },
+      // Cell under 
       { x: catPosition.x, y: (catPosition.y - 1) }
     ]
   
@@ -232,6 +210,7 @@ function moveCat(catPosition){
 
 
 // Function that checks if the cheese of a cell is eaten
+//
 function isCheeseEaten(gameboard,x,y){
   let cell = gameboard[y][x]
   // If cell value is empty or rat, then the cheese is eaten 
@@ -241,31 +220,24 @@ function isCheeseEaten(gameboard,x,y){
   return false;
 }
 
-/**
- * Eats a cheese and increment score by one 
- * @param {*} gameboard The game board  
- * @param {*} x The x coordinate of the cell
- * @param {*} y The y coordinate of the cell 
- * @returns the updated game board 
- */
 // Function that handles eating cheese from the board 
 // 
-  function eatCheese(gameboard, x, y){
-    // The actual cell 
-    let cell = gameboard[y][x]
-    // Check if cell exists and if the cheese has been eaten 
-    if(cell && !isCheeseEaten(gameboard,x,y)){
-      // If not, increment score by one
-      incrementPoints()
-      // Update cell value to empty 
-      updateCellValue(gameboard,x,y,'empty')
-      // Plays sound effect when eating
-      playChew();
-      // Return the updated game board 
-      return gameboard;
-    } else {
+function eatCheese(gameboard, x, y){
+  // The actual cell 
+  let cell = gameboard[y][x]
+  // Check if cell exists and if the cheese has been eaten 
+  if(cell && !isCheeseEaten(gameboard,x,y)){
+    // If cheese not eaten, increment score by one
+    incrementPoints()
+    // Update cell value to empty 
+    updateCellValue(gameboard,x,y,'empty')
+    // Plays sound effect when eating
+    playChew();
+    // Return the updated game board 
+    return gameboard;
+  } else {
     // Return game board as is
-      return gameboard;
+    return gameboard;
   }
 }
   
@@ -274,7 +246,7 @@ function isCheeseEaten(gameboard,x,y){
   // TODO: Implement game over-screen, handle collision 
   function collision(){
     // TODO: collision, decrement lives? 
-    setIsPlaying(false);
+    //setIsPlaying(false);
   }
 
   // Function that increments point counter by one 
@@ -296,6 +268,13 @@ function isCheeseEaten(gameboard,x,y){
     p = points - 1;
     console.log('Decrements score')
     return(setPoints(p));
+  }
+
+  function incrementCheeseCounter(){
+    let c = 0; 
+    c = numberOfCheese + 1;
+    return(setNumberOfCheese(c));
+
   }
   
   // Checks if a cell is a brick 
@@ -345,6 +324,7 @@ function isCheeseEaten(gameboard,x,y){
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
+      collision();
       console.log('collision - game over');
     }
     // If the cell is equal to the player coordinates, we place the rat there
@@ -373,12 +353,22 @@ function isCheeseEaten(gameboard,x,y){
     return <Cheese/>
   }
 
+  function startGame(){
+    
+  }
+
+  function endGame(){
+
+  }
+  
+
+  // Then we return the html code for the game  
     return (
-      
       <> 
-      { isPlaying ?  
-        Text 
-       : <GameOver> Text </GameOver>}
+      <div id='gameOver'> 
+        <GameOver score={points}/>
+      </div>
+       {/* HTML code for the game logic  */}
         <div className='body' 
           style={{
             flexDirection:'row', 
@@ -387,19 +377,29 @@ function isCheeseEaten(gameboard,x,y){
             fontWeight:'bold'}}>
             {language.score.titleText}{points}
         </div>
-        <div className="game-board" style={{backgroundColor: 'gray' }}>
-          {gameboard.map((cells, y) => (
-            <div key={y} className="row" style={{ }}>
-              {cells.map(({ x, y }) => (
-                <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-                  {determineElements(gameboard, x,y)}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div> 
+        {/* The game board  */}
+          <div  
+            className="game-board" 
+            style={{
+              backgroundColor: 'gray' 
+            }}>
+            {gameboard.map((cells, y) => (
+              <div key={y} className="row">
+                {cells.map(({ x, y }) => (
+                  <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
+                    {determineElements(gameboard, x,y)}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div> 
+        
     </>
   );
 }
 
 export default GameBoard;
+
+//************
+// END of file GameBoard.jsx 
+//************
