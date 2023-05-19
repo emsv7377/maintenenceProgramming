@@ -1,3 +1,13 @@
+/**
+ * File: GameBoard.jsx 
+ * 
+ * This file contains the game logic of RatMan, which includes navigating the rat,
+ * collecting cheese and game over. 
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
 import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
@@ -9,8 +19,9 @@ import chew from './audio/chew.mp3'
 import GameOver from '../screens/GameOver';
 import { useNavigate } from 'react-router-dom';
 
+
 function GameBoard(props) {
-  const [rows,setRows] = useState([]); // state for gameboard 
+  const [gameboard,setGameboard] = useState([]); // state for gameboard 
   const { width, height } = props;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // state for the player's position
   const [open, setOpen] = useState(false) // state for Rat open or closed
@@ -24,7 +35,7 @@ function GameBoard(props) {
   const [isPlaying, setIsPlaying] = useState(true);  // state for game over
   const [catPosition, setCatPosition] = useState({x:1, y:8})
 
-  // sets direction state according to keyboard input
+  // Sets the Direction state according to keyboard input
   const handleKeyPress = (e) => {
     switch (e.key) {
       case 'w':
@@ -46,55 +57,59 @@ function GameBoard(props) {
     }
   }
 
-  // moves player according to direction state
+  // moves player according to the Direction state
   const move = () => {
     let newCoords = {}
   
     switch (direction) {
+      // Right 
       case 'r':
         newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
         if (!isBrick(newCoords.x, newCoords.y)) {
           setPlayerCoords(newCoords)
-          eatCheese(rows,newCoords.x,newCoords.y)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
           moveCat(catPosition)
         }
         break
+      // Left 
       case 'l':
         newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
         if (!isBrick(newCoords.x, newCoords.y)){
           setPlayerCoords(newCoords)
-          eatCheese(rows,newCoords.x,newCoords.y)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
           moveCat(catPosition)
         }
         break
+      // Up 
       case 'u':
         newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
         if (!isBrick(newCoords.x, newCoords.y)) {
           setPlayerCoords(newCoords)
-          eatCheese(rows,newCoords.x,newCoords.y)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
           moveCat(catPosition)
         }       
         break
+      // Down 
       case 'd':
         newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
         if (!isBrick(newCoords.x, newCoords.y)) {
           setPlayerCoords(newCoords)
-          eatCheese(rows,newCoords.x,newCoords.y)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
           moveCat(catPosition)
         }
 
         break
     }
   }
-  // add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
+  // Add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress)
     return () => {
       document.removeEventListener('keydown', handleKeyPress)
     }
-  },[rows, playerCoords.x, playerCoords.y])
+  },[gameboard, playerCoords.x, playerCoords.y])
 
-  // change open state and player coordinates every 300 ms.
+  // Change the open state for Rat and player coordinates every 300 ms.
   useEffect(() => {
     setTimeout(() => { 
       setOpen(!open)
@@ -104,91 +119,90 @@ function GameBoard(props) {
   //setTimeout(() => setOpen(!open), 500)
   
 
-// Creates a game board with cells as a matrice
-  // Cell value indicates type of cell 
-  useEffect(() => {
+// Creates a game board with empty cells as a matrice
+useEffect(() => {
+    // cellValue indicates type of cell 
     let cellValue = ''
     let blankRows = [];
     for (let y = 0; y < height; y++) {
       const cells = [];
       for (let x = 0; x < width; x++) {
+        // x and y are coordinates for the cell 
         cells.push({ x, y, cellValue });
       }
       blankRows.push(cells);
     }
-    setRows(blankRows);
+    setGameboard(blankRows);
   },[]);
  
-   
-/**
- * Updates the cellValue parameter of a chosen cell in the array rows 
- * @param {*} rows The array of cells 
- * @param {*} x The x coordinate of the chosen cell
- * @param {*} y The y coordinate of the chosen cell 
- * @param {String} newValue  the new cellValue value for x and y
- * @returns The updated rows array  
- */
- function updateCellValue(rows, x, y, newValue){
-  if(rows[y]){
-    let cell = rows[y][x];
+  // Function that updates the cell value of a cell, 
+  // returns the updated gameboard.
+  // 
+ function updateCellValue(gameboard, x, y, newValue){
+  if(gameboard[y]){
+    let cell = gameboard[y][x];
     if(cell){
       if(cell.cellValue === 'empty' || cell.cellValue === 'rat'){
-        return rows;
+        return gameboard;
       } else {
         cell.cellValue = newValue;
       }
       }
-    return rows;
+    return gameboard;
  }
 }
 
-/**
- * Checks adjacent cells from cat's current position 
- * @param {*} catPosition Position of cat 
- * @returns All adjacent cells 
- */
+// Calculates the adjacent cells, from the position of the Cat 
+// The adjacent cells are either to the left, right, up or down. 
+// 
 function adjacentCells(catPosition){
   let adjCells = {}
 
-  if(catPosition.x === 0 && catPosition.y !== 0){
+  // If Cat is positioned on the x-axis, we only have 3 possible adjacent cells
+  /*if(catPosition.x === 0 && catPosition.y !== 0){
+    console.log('x === 1 // 11')
     adjCells = [
       { x: (catPosition.x + 1), y: catPosition.y },
       { x: catPosition.x, y: (catPosition.y + 1) }, 
       { x: catPosition.x, y: (catPosition.y - 1) }
     ]
-  }
-  else if (catPosition.y === 0 && catPosition.x !== 0){
+  // If Cat is positioned on the y-axis, we only have 3 possible adjacent cells 
+  } else if (catPosition.y === 1 && catPosition.x !== 1){
+    console.log('y === 1')
     adjCells = [
       { x: catPosition.x, y: (catPosition.y + 1) }, 
       { x: (catPosition.x + 1), y: catPosition.y }, 
       { x: (catPosition.x - 1), y: catPosition.y }
     ]
-  } else if (catPosition.x === 0 && catPosition.y === 0){
+  // If Cat is positioned 
+  } else if (catPosition.x === 1 && catPosition.y === 1 || catPosition.x === 11 && catPosition.y === 11 || ){
+    console.log('x === 1 && y === 1')
     adjCells = [
       { x: (catPosition.x + 1), y: catPosition.y }, 
       { x: catPosition.x, y: (catPosition.y + 1) }
     ]
-  } else {
+  } else {*/
+    
     adjCells = [
       { x: (catPosition.x + 1), y: catPosition.y },
       { x: (catPosition.x - 1), y: catPosition.y },
       { x: catPosition.x, y: (catPosition.y + 1) },
       { x: catPosition.x, y: (catPosition.y - 1) }
     ]
-  }
+  
   return adjCells;
 }
 
-/**
- * Checks adjacent cells to cat position 
- * @param {*} adjCells Adjacent cells on the current position 
- * @returns Possible moves for cat 
- */
+// Calculates possible moves for the Cat  
+// 
 function possibleMoves(catPosition){
+  // Calculate adjacent cells first 
   let adjCells = adjacentCells(catPosition);
   let newMoves = []
   for(let i = 0; i < adjCells.length; i ++){
+    // Check if the cell is a brick 
     if(!isBrick(adjCells[i].x, adjCells[i].y)){
+      // If not, we add the possible move to the array newMoves 
       let cell = ({ x: adjCells[i].x, y: adjCells[i].y });
       newMoves.push(cell);
     }
@@ -196,44 +210,34 @@ function possibleMoves(catPosition){
   return newMoves;
 }
 
-
-/**
- * 
- * @param {*} min Minimum value 
- * @param {*} max Maximum value 
- * @returns Random integer between min and max 
- */
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+// Generates a random int within the interval of variables min and max 
+// 
+function getRandomInt(arrayLength) {
+  return Math.floor(Math.random() * (arrayLength)); 
 }
 
-/**
- * Moves the cat to a new adjacent cell, choice done randomly  
- * @param {*} catPosition 
- */
+// Moves the cat to a new adjacent cell, which is chosen randomly 
+// 
 function moveCat(catPosition){
+  // First calculate pssible moves 
   let moves = possibleMoves(catPosition);
-  let min = 0; 
-  let max = (moves.length);
-  // Randomize choice of next move
-  let randNum = getRandomInt(min,max)
-
+  // Randomize choice of next move, based on length of moves 
+  let randNum = getRandomInt(moves.length);
+  // Next move is then calculated 
   let nextMove = moves[randNum];
+  // And the cat is moved to this randomly chosen cell 
   setCatPosition(nextMove);
-
 }
 
 /**
  * Checks if the cheese of a cell is eaten 
- * @param {*} rows The game board
+ * @param {*} gameboard The game board
  * @param {*} x X coordinate of the cell
  * @param {*} y Y coordinate of the cell 
  * @returns true if cell is empty, false otherwise 
  */
-function isCheeseEaten(rows,x,y){
-  let cell = rows[y][x]
+function isCheeseEaten(gameboard,x,y){
+  let cell = gameboard[y][x]
   if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
     return true;
   }
@@ -242,27 +246,27 @@ function isCheeseEaten(rows,x,y){
 
 /**
  * Eats a cheese and increment score by one 
- * @param {*} rows The game board  
+ * @param {*} gameboard The game board  
  * @param {*} x The x coordinate of the cell
  * @param {*} y The y coordinate of the cell 
  * @returns the updated game board 
  */
-  function eatCheese(rows, x,y){
-    let cell = rows[y][x]
+  function eatCheese(gameboard, x,y){
+    let cell = gameboard[y][x]
     console.log('cell.cellvalue', cell.cellValue)
-    if(cell && !isCheeseEaten(rows,x,y)){
+    if(cell && !isCheeseEaten(gameboard,x,y)){
       // Increment score by one
       incrementPoints()
       // Update cell value that it is empty 
-      updateCellValue(rows,x,y,'empty')
+      updateCellValue(gameboard,x,y,'empty')
       // Plays sound effect 
       playChew();
       // Return the updated game board 
-      return rows;
+      return gameboard;
     } else {
       console.log('already eaten')
     // Return updated game board
-      return rows;
+      return gameboard;
   }
 }
   /**
@@ -327,31 +331,28 @@ function isCheeseEaten(rows,x,y){
 
   }
 
-
-
-
   // Determines what type of elements are in each cell 
-  const determineElements = (rows, x, y) => {
+  const determineElements = (gameboard, x, y) => {
     if(x === catPosition.x && y === catPosition.y){
       //console.log('Cat pos: ', catPosition.x, catPosition.y)
-      updateCellValue(rows,x,y,'cat')
+      updateCellValue(gameboard,x,y,'cat')
       return <Cat/>
     }
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       console.log('collision - game over');
     }
     if (x === playerCoords.x && y === playerCoords.y) {
-      updateCellValue(rows,x,y,'rat')
+      updateCellValue(gameboard,x,y,'rat')
       return <Rat open={open} direction={direction}/>
     }
     if (isBrick(x, y)) {
-      updateCellValue(rows,x,y,'brick')
+      updateCellValue(gameboard,x,y,'brick')
       return <Brick/>
     }
-    if(isCheeseEaten(rows,x,y)){
+    if(isCheeseEaten(gameboard,x,y)){
       return;
     }
-    updateCellValue(rows,x,y,'cheese')
+    updateCellValue(gameboard,x,y,'cheese')
     return <Cheese/>
   }
 
@@ -359,8 +360,8 @@ function isCheeseEaten(rows,x,y){
       
       <> 
       { isPlaying ?  
-        null
-       : <GameOver></GameOver>};
+        Text 
+       : <GameOver> Text </GameOver>}
         <div className='body' 
           style={{
             flexDirection:'row', 
@@ -370,11 +371,11 @@ function isCheeseEaten(rows,x,y){
             {language.score.titleText}{points}
         </div>
         <div className="game-board" style={{backgroundColor: 'gray' }}>
-          {rows.map((cells, y) => (
+          {gameboard.map((cells, y) => (
             <div key={y} className="row" style={{ }}>
               {cells.map(({ x, y }) => (
                 <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-                  {determineElements(rows, x,y)}
+                  {determineElements(gameboard, x,y)}
                 </div>
               ))}
             </div>
