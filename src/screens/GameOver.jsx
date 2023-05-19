@@ -1,18 +1,20 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'
-import GameBoard from '../components/GameBoard'
-import pacman from '../assets/pacman.png'
-import index from '../index.css?inline';
 
-function GameOver({ score }) {
 
+import ReactModal from 'react-modal';
+
+function GameOver({ finalScore, gameover }) {
    return(
-        <div id='gameOver'>
-            <h1>Game Over</h1>
+        <>
+        <ReactModal 
+            gameover={gameover}
+            contentLabel='pop up'>
+            <h4>Game Over</h4>
                <span className='centerScreen title'>Game Over</span>
-               <span className='centerScreen score'>Score: {score} </span>
+               <span className='centerScreen score'>Score: {finalScore} </span>
                <span className='centerScreen pressEnter'>Press enter to continue!</span>
-            </div>
+               </ReactModal>
+               </>
     )
    }
 

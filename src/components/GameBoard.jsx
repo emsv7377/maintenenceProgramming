@@ -28,7 +28,10 @@ function GameBoard(props) {
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // State for player's score 
   const language = useContext(LanguageContext); // State for current language 
-  
+  const [finalScore, setFinalScore] = useState(0); // State for final score of player
+  const [gameover, setGameover] = useState(false); // State for game over 
+  const numCheese = countCheese(gameboard);
+
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0}); // State for sound effect: eatCheese
 
@@ -97,7 +100,6 @@ function GameBoard(props) {
           eatCheese(gameboard,newCoords.x,newCoords.y)
           moveCat(catPosition)
         }
-
         break
     }
   }
@@ -151,6 +153,20 @@ useEffect(() => {
     return gameboard;
  }
 }
+
+function countCheese(gameboard){
+  let count = 0; 
+  gameboard.forEach(row => {
+    row.forEach(cell => {
+      if (cell.cellValue === 'cheese'){
+        count++;
+      }
+    });
+  });
+  return count;
+}
+
+
 
 // Calculates the adjacent cells, from the position of the Cat 
 // The adjacent cells are either to the left, right, up or down. 
@@ -246,17 +262,24 @@ function eatCheese(gameboard, x, y){
   // TODO: Implement game over-screen, handle collision 
   function collision(){
     // TODO: collision, decrement lives? 
-    //setIsPlaying(false);
+    setGameover(true);
+    setFinalScore(points);
   }
+
+
 
   // Function that increments point counter by one 
   // 
   function incrementPoints(){
-    let p = 0;
     // Calculate previous value of point and put it into the new variable p
-    p = points + 1;
-    // Set point score to the new value of p 
-    return(setPoints(p));
+    // Set point score to the new value of p
+    if(numCheese === 0){
+      return p;
+    } else {
+      let p = 0;
+      p = points + 1;
+      return(setPoints(p));
+    }
   }
   
   // Function that decrements point counter by one 
@@ -268,13 +291,6 @@ function eatCheese(gameboard, x, y){
     p = points - 1;
     console.log('Decrements score')
     return(setPoints(p));
-  }
-
-  function incrementCheeseCounter(){
-    let c = 0; 
-    c = numberOfCheese + 1;
-    return(setNumberOfCheese(c));
-
   }
   
   // Checks if a cell is a brick 
@@ -324,7 +340,7 @@ function eatCheese(gameboard, x, y){
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
-      collision();
+      //collision()
       console.log('collision - game over');
     }
     // If the cell is equal to the player coordinates, we place the rat there
@@ -353,30 +369,24 @@ function eatCheese(gameboard, x, y){
     return <Cheese/>
   }
 
-  function startGame(){
-    
-  }
-
-  function endGame(){
-
-  }
   
-
   // Then we return the html code for the game  
     return (
       <> 
-      <div id='gameOver'> 
-        <GameOver score={points}/>
-      </div>
+       
+        {<GameOver score={finalScore} gameover={gameover}/>}
+      
        {/* HTML code for the game logic  */}
+        
         <div className='body' 
           style={{
             flexDirection:'row', 
             justifyContent:'space-evenly',
             fontSize:30, 
             fontWeight:'bold'}}>
-            {language.score.titleText}{points}
-        </div>
+             {isPlaying && language.score.titleText}{points}
+             {/* debug code {' cheese: '}{numCheese}
+             { ' gameover: '}{gameover.toString()} */}
         {/* The game board  */}
           <div  
             className="game-board" 
@@ -392,8 +402,10 @@ function eatCheese(gameboard, x, y){
                 ))}
               </div>
             ))}
-          </div> 
-        
+          </div>
+        </div>
+      
+         
     </>
   );
 }

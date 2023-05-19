@@ -42,20 +42,20 @@ Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson
   color: #ffffff;
 }
 
-#gameOver {
+/*
+#gameOverScreen {
  width:100%;
  padding:50px 0;
  text-align:center;
- background-color: black;
+ background-color: red;
  margin-top:20px;
  display:none; 
 }
 
-#gamePlay {
-  background-color: black;
-  margin-top:20px;
-  display:none; 
-}
+#gamePlaying {
+  width:100%;
+  display:block; 
+} */
 
 .cell {
   display: flex;
