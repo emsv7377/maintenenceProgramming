@@ -94,7 +94,7 @@ function GameBoard(props) {
     }
   },[rows, playerCoords.x, playerCoords.y])
 
-  // change open state and player coordinates every 300 ms.
+  // change open state and player coordinates every 200 ms.
   useEffect(() => {
     setTimeout(() => { 
       setOpen(!open)
