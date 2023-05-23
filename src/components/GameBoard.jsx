@@ -109,7 +109,7 @@ function GameBoard(props) {
     }
   },[gameboard, playerCoords.x, playerCoords.y])
 
-  // Change the open state for Rat and player coordinates every 300 ms.
+  // change open state and player coordinates every 200 ms.
   useEffect(() => {
     setTimeout(() => { 
       setOpen(!open)
@@ -318,7 +318,7 @@ function eatCheese(gameboard, x, y){
       // Update cell value to cat 
       updateCellValue(gameboard,x,y,'cat')
       // Return the cat 
-      return <Cat/>
+      return <Cat open={open}/>
     }
     // If cat position is equal to the player position
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
