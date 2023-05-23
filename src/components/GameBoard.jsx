@@ -335,7 +335,7 @@ function isCheeseEaten(rows,x,y){
     if(x === catPosition.x && y === catPosition.y){
       //console.log('Cat pos: ', catPosition.x, catPosition.y)
       updateCellValue(rows,x,y,'cat')
-      return <Cat/>
+      return <Cat open={open}/>
     }
     if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       console.log('collision - game over');

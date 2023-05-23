@@ -1,11 +1,9 @@
-import kitty from '../assets/cat.png'
-
-function Cat() {
+function Cat({ open }) {
     return (
         <img
-            src={kitty}
-            width={50}
-            height={50}
+            src={`cat-${open ? 'open' : 'closed'}.svg`} 
+            width={70}
+            height={70}
         />
     )
 
