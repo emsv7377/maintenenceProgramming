@@ -17,12 +17,10 @@ import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
 import GameOver from '../screens/GameOver';
-import { useNavigate } from 'react-router-dom';
 
 
-function GameBoard(props) {
+function GameBoard({ width, height }) {
   const [gameboard,setGameboard] = useState([]); // State for gameboard 
-  const { width, height } = props;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // State for the player's position
   const [open, setOpen] = useState(false) // State for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
@@ -381,17 +379,21 @@ function eatCheese(gameboard, x, y){
           <div  
             className="game-board" 
             style={{
-              backgroundColor: 'gray' 
+              backgroundColor: 'gray',
+              display: 'grid',
+              gridTemplateColumns: `repeat(${width}, 1fr)`,
+              gridTemplateRows: `repeat(${height}, 1fr)`,
+              maxHeight: '60vh',
+              maxWidth: '100vw',
+              aspectRatio: '1 / 1' 
             }}>
-            {gameboard.map((cells, y) => (
-              <div key={y} className="row">
-                {cells.map(({ x, y }) => (
-                  <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-                    {determineElements(gameboard, x,y)}
+            {gameboard.map((cells) => {
+              return cells.map(({ x, y }) => (
+                  <div key={`${x}-${y}`} className="cell" style={{ color: 'gray', gridArea: `${y + 1} / ${x + 1} / ${y + 2} / ${x + 2}`}}>
+                    {determineElements(gameboard, x, y)}
                   </div>
-                ))}
-              </div>
-            ))}
+                ))
+            })}
           </div> 
         
     </>
