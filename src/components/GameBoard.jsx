@@ -96,41 +96,30 @@ useEffect(() => {
 
     moveCat(catPosition)
   
+    // determine new coordinates
     switch (direction) {
       // Right 
       case 'r':
         newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
-        // if next position is not a brick, update position with setPlayerCoords.
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-        }
         break
       // Left 
       case 'l':
         newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)){
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-        }
         break
       // Up 
       case 'u':
-        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-        }       
+        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}  
         break
       // Down 
       case 'd':
         newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-        }
-
         break
+    }
+
+    // if next position is not a brick, update position with setPlayerCoords.
+    if (!isBrick(newCoords.x, newCoords.y)) {
+      setPlayerCoords(newCoords)
+      eatCheese(gameboard,newCoords.x,newCoords.y)
     }
   }
 
