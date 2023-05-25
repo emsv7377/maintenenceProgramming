@@ -5,8 +5,9 @@ import './App.css'
 import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
 import Settings from './screens/Settings'
-import Tutorial from './screens/Tutorial'
+
 import Game from './screens/Game'
+import Tutorial from './screens/Tutorial'
 
 import { ENG, SVE } from './components/Language'
 import LanguageContext from './components/LanguageContext';
@@ -47,7 +48,7 @@ function App() {
         <span>
           <button
             style={btnStyle}
-            onClick={() => onLanguageChange('eng')}>
+            onClick={() => onLanguageChange('sve')}>
               <img
                 src={ukflag}
                 width={30}
@@ -64,7 +65,7 @@ function App() {
             </button>
           <button
             style={btnStyle}
-            onClick={() => console.log('implement tutorial')}>
+            onClick={() => console.log('navigate')}>
               <img
                 src={btnHelp}
                 width={30}
@@ -86,7 +87,7 @@ function App() {
               <Route path='/' element={<StartScreen/>} />
                 <Route path='/GameBoard' element={<GameBoard width={13} height={11} />}/>
                 <Route path='Settings' element={<Settings/>}/>
-              <Route path='Tutorial' element={<Tutorial/>}/>
+              <Route path='/Tutorial' element={<Tutorial width={8} height={7}/>}/>
           </Routes>
           </BrowserRouter>
         </LanguageContext.Provider>
