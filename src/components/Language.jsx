@@ -37,4 +37,7 @@ export const SVE = {
     choosenLang:{
         titleText:'Svenska'
     },
+    score: {
+        titleText: 'Poäng: '
+    },
 }

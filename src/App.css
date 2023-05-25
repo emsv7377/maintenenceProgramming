@@ -13,20 +13,14 @@ Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson
   text-align: center;
 }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  margin:auto;
-  justify-content: center;
-  align-items: center;
-}
-
 /* language bar */
 .top-menu{
   width:100%;
+  top: 0;
+  left:0;
+  position: fixed;
   background-color: #fff;
   overflow:auto;
-  height:20%;
   display:flex;
 }
 
@@ -61,11 +55,9 @@ Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-  flex-basis: 0;
   /*border: 1px solid white;*/
-  height: 60px;
-  width: 60px;
+  height: 100%;
+  aspect-ratio: 1 / 1;
 }
 .logo {
   height: 6em;

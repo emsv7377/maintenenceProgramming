@@ -17,101 +17,37 @@ import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
 import GameOver from '../screens/GameOver';
-import { useNavigate } from 'react-router-dom';
 
 
-function GameBoard(props) {
+function GameBoard({ width, height }) {
   const [gameboard,setGameboard] = useState([]); // State for gameboard 
-  const { width, height } = props;
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // State for the player's position
   const [open, setOpen] = useState(false) // State for Rat open or closed
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // State for player's score 
   const language = useContext(LanguageContext); // State for current language 
-  const [finalScore, setFinalScore] = useState(0); // State for final score of player
+  const [finalScore, setFinalScore] = useState(null); // State for final score of player
   const [gameover, setGameover] = useState(false); // State for game over 
   const numCheese = countCheese(gameboard);
+
+  const [gameplay, setGamePlay] = useState(true);
 
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0}); // State for sound effect: eatCheese
 
   const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
-  const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat 
+  const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat's position
 
-  // Sets the Direction state according to keyboard input
-  const handleKeyPress = (e) => {
-    switch (e.key) {
-      case 'w':
-        case 'ArrowUp':
-          setDirection('u')
-          break
-          case 'a':
-            case 'ArrowLeft':
-              setDirection('l')
-              break
-              case 's':
-                case 'ArrowDown':
-                  setDirection('d')
-                  break
-                  case 'd':
-                    case 'ArrowRight':
-                      setDirection('r')
-                      break
-    }
-  }
-
-  // moves player according to the Direction state
-  const move = () => {
-    let newCoords = {}
-  
-    switch (direction) {
-      // Right 
-      case 'r':
-        newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }
-        break
-      // Left 
-      case 'l':
-        newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)){
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }
-        break
-      // Up 
-      case 'u':
-        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }       
-        break
-      // Down 
-      case 'd':
-        newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }
-        break
-    }
-  }
   // Add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress)
     return () => {
       document.removeEventListener('keydown', handleKeyPress)
     }
-  },[gameboard, playerCoords.x, playerCoords.y])
+  },[])
 
-  // Change the open state for Rat and player coordinates every 300 ms.
+
+  // change open state and player coordinates every 200 ms.
   useEffect(() => {
     setTimeout(() => { 
       setOpen(!open)
@@ -136,6 +72,62 @@ useEffect(() => {
     }
     setGameboard(blankRows);
   },[]);
+
+  // Sets the Direction state according to keyboard input
+  const handleKeyPress = (e) => {
+    switch (e.key) {
+      case 'w':
+      case 'ArrowUp':
+        setDirection('u')
+        break
+      case 'a':
+      case 'ArrowLeft':
+        setDirection('l')
+        break
+      case 's':
+      case 'ArrowDown':
+        setDirection('d')
+        break
+      case 'd':
+      case 'ArrowRight':
+        setDirection('r')
+        break
+    }
+  }
+
+  // moves player according to the Direction state
+  const move = () => {
+    let newCoords = {}
+
+    moveCat(catPosition)
+  
+    // determine new coordinates
+    switch (direction) {
+      // Right 
+      case 'r':
+        newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
+        break
+      // Left 
+      case 'l':
+        newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
+        break
+      // Up 
+      case 'u':
+        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}  
+        break
+      // Down 
+      case 'd':
+        newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
+        break
+    }
+
+    // if next position is not a brick, update position with setPlayerCoords.
+    if (!isBrick(newCoords.x, newCoords.y)) {
+      setPlayerCoords(newCoords)
+      eatCheese(gameboard,newCoords.x,newCoords.y)
+    }
+  }
+
  
   // Function that updates the cell value of a cell, 
   // returns the updated gameboard.
@@ -256,14 +248,21 @@ function eatCheese(gameboard, x, y){
     return gameboard;
   }
 }
-  
+  function showGameOverScreen(){
+    if(gameover){
+      var x = document.getElementById('gameOver')
+      x.style.display = 'block';
+    }
+  }
   // Function that handles collision between the rat and the cat 
   // 
   // TODO: Implement game over-screen, handle collision 
-  function collision(){
+  function endGame(){
     // TODO: collision, decrement lives? 
     setGameover(true);
+    showGameOverScreen();
     setFinalScore(points);
+    setGamePlay(false);
   }
 
 
@@ -271,12 +270,13 @@ function eatCheese(gameboard, x, y){
   // Function that increments point counter by one 
   // 
   function incrementPoints(){
-    // Calculate previous value of point and put it into the new variable p
-    // Set point score to the new value of p
+    
     if(numCheese === 0){
-      return p;
+      return points;
     } else {
       let p = 0;
+      // Calculate previous value of point and put it into the new variable p
+      // Set point score to the new value of p
       p = points + 1;
       return(setPoints(p));
     }
@@ -334,13 +334,13 @@ function eatCheese(gameboard, x, y){
       // Update cell value to cat 
       updateCellValue(gameboard,x,y,'cat')
       // Return the cat 
-      return <Cat/>
+      return <Cat open={open}/>
     }
     // If cat position is equal to the player position
-    if(catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
-      //collision()
+      endGame()
       console.log('collision - game over');
     }
     // If the cell is equal to the player coordinates, we place the rat there
@@ -372,43 +372,48 @@ function eatCheese(gameboard, x, y){
   
   // Then we return the html code for the game  
     return (
-      <> 
-       
-        {<GameOver score={finalScore} gameover={gameover}/>}
-      
+      <>
+      { gameover ? 
+       <>
+       <div id='gameOver'>
+       <GameOver score={finalScore}/>
+        <h1>Text här va </h1></div>
+        </>: null }
        {/* HTML code for the game logic  */}
-        
+       {gameplay ? 
         <div className='body' 
           style={{
             flexDirection:'row', 
             justifyContent:'space-evenly',
             fontSize:30, 
             fontWeight:'bold'}}>
-             {isPlaying && language.score.titleText}{points}
-             {/* debug code {' cheese: '}{numCheese}
-             { ' gameover: '}{gameover.toString()} */}
+             {language.score.titleText}{points}
+             {' cheese: '}{numCheese}
+             { ' gameover: '}{gameover.toString()}
         {/* The game board  */}
           <div  
             className="game-board" 
             style={{
-              backgroundColor: 'gray' 
+              backgroundColor: 'gray',
+              display: 'grid',
+              gridTemplateColumns: `repeat(${width}, 1fr)`,
+              gridTemplateRows: `repeat(${height}, 1fr)`,
+              maxHeight: '60vh',
+              maxWidth: '100vw',
+              aspectRatio: '4 / 3' 
             }}>
-            {gameboard.map((cells, y) => (
-              <div key={y} className="row">
-                {cells.map(({ x, y }) => (
-                  <div key={`${x}-${y}`} className="cell" style={{ color: 'gray'}}>
-                    {determineElements(gameboard, x,y)}
+            {gameboard.map((cells) => {
+              return cells.map(({ x, y }) => (
+                  <div key={`${x}-${y}`} className="cell" style={{ color: 'gray', gridArea: `${y + 1} / ${x + 1} / ${y + 2} / ${x + 2}`}}>
+                    {determineElements(gameboard, x, y)}
                   </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      
-         
-    </>
+                ))
+            })}
+          </div> </div> : null }
+          </>
   );
 }
+
 
 export default GameBoard;
 

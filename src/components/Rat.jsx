@@ -1,10 +1,8 @@
-import { UNSAFE_DataRouterStateContext } from "react-router-dom";
-
 function Rat({ open, direction }) {
 
   let transform = ''
-  if (direction === 'l') transform = 'scaleX(-1)'
-  if (direction === 'u') transform = 'rotate(-90deg)'
+  if (direction === 'l') transform = 'scaleX(-1)'//flip an image
+  if (direction === 'u') transform = 'rotate(-90deg)' // rotates an element around a fixed point on the 2D plane
   if (direction === 'r') transform = 'rotate(0deg)'
   if (direction === 'd') transform = 'rotate(90deg)'
 
