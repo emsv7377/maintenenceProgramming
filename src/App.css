@@ -1,16 +1,16 @@
+/*
+File: App.css 
+
+Version 1.0 
+Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+
+*/
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  margin:auto;
-  justify-content: center;
-  align-items: center;
 }
 
 /* language bar */
@@ -25,15 +25,39 @@
 }
 
 
+.pressEnter {
+  top: 45%;
+  font-size: 26px;
+  color: #ffffff;
+}
+.score {
+  top: 30%;
+  font-size: 40px;
+  color: #ffffff;
+}
+
+#gameOver {
+ width:100%;
+ padding:50px 0;
+ text-align:center;
+ background-color: black;
+ margin-top:20px;
+ display:none; 
+}
+
+#gamePlay {
+  background-color: black;
+  margin-top:20px;
+  display:none; 
+}
+
 .cell {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-  flex-basis: 0;
   /*border: 1px solid white;*/
-  height: 60px;
-  width: 60px;
+  height: 100%;
+  aspect-ratio: 1 / 1;
 }
 .logo {
   height: 6em;
