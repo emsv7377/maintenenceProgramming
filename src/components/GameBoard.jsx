@@ -33,79 +33,14 @@ function GameBoard({ width, height }) {
   const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
   const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat's position
 
-  // Sets the Direction state according to keyboard input
-  const handleKeyPress = (e) => {
-    switch (e.key) {
-      case 'w':
-        case 'ArrowUp':
-          setDirection('u')
-          break
-          case 'a':
-            case 'ArrowLeft':
-              setDirection('l')
-              break
-              case 's':
-                case 'ArrowDown':
-                  setDirection('d')
-                  break
-                  case 'd':
-                    case 'ArrowRight':
-                      setDirection('r')
-                      break
-    }
-  }
-
-  // moves player according to the Direction state
-  const move = () => {
-    let newCoords = {}
-  
-    switch (direction) {
-      // Right 
-      case 'r':
-        newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }
-        break
-      // Left 
-      case 'l':
-        newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
-        if (!isBrick(newCoords.x, newCoords.y)){
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }
-        break
-      // Up 
-      case 'u':
-        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }       
-        break
-      // Down 
-      case 'd':
-        newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
-        if (!isBrick(newCoords.x, newCoords.y)) {
-          setPlayerCoords(newCoords)
-          eatCheese(gameboard,newCoords.x,newCoords.y)
-          moveCat(catPosition)
-        }
-
-        break
-    }
-  }
   // Add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress)
     return () => {
       document.removeEventListener('keydown', handleKeyPress)
     }
-  },[gameboard, playerCoords.x, playerCoords.y])
+  },[])
+
 
   // change open state and player coordinates every 200 ms.
   useEffect(() => {
@@ -132,6 +67,73 @@ useEffect(() => {
     }
     setGameboard(blankRows);
   },[]);
+
+  // Sets the Direction state according to keyboard input
+  const handleKeyPress = (e) => {
+    switch (e.key) {
+      case 'w':
+      case 'ArrowUp':
+        setDirection('u')
+        break
+      case 'a':
+      case 'ArrowLeft':
+        setDirection('l')
+        break
+      case 's':
+      case 'ArrowDown':
+        setDirection('d')
+        break
+      case 'd':
+      case 'ArrowRight':
+        setDirection('r')
+        break
+    }
+  }
+
+  // moves player according to the Direction state
+  const move = () => {
+    let newCoords = {}
+
+    moveCat(catPosition)
+  
+    switch (direction) {
+      // Right 
+      case 'r':
+        newCoords = { x: (playerCoords.x + 1) % width, y: playerCoords.y}
+        // if next position is not a brick, update position with setPlayerCoords.
+        if (!isBrick(newCoords.x, newCoords.y)) {
+          setPlayerCoords(newCoords)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
+        }
+        break
+      // Left 
+      case 'l':
+        newCoords = { x: (playerCoords.x - 1) < 0 ? width : (playerCoords.x - 1), y: playerCoords.y}
+        if (!isBrick(newCoords.x, newCoords.y)){
+          setPlayerCoords(newCoords)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
+        }
+        break
+      // Up 
+      case 'u':
+        newCoords = { x: playerCoords.x, y: (playerCoords.y - 1) < 0 ? height : (playerCoords.y - 1)}
+        if (!isBrick(newCoords.x, newCoords.y)) {
+          setPlayerCoords(newCoords)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
+        }       
+        break
+      // Down 
+      case 'd':
+        newCoords = { x: playerCoords.x, y: (playerCoords.y + 1) % height}
+        if (!isBrick(newCoords.x, newCoords.y)) {
+          setPlayerCoords(newCoords)
+          eatCheese(gameboard,newCoords.x,newCoords.y)
+        }
+
+        break
+    }
+  }
+
  
   // Function that updates the cell value of a cell, 
   // returns the updated gameboard.
