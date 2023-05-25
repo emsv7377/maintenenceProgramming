@@ -26,7 +26,7 @@ function GameBoard({ width, height }) {
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // State for player's score 
   const language = useContext(LanguageContext); // State for current language 
-  const [finalScore, setFinalScore] = useState(null); // State for final score of player
+  const [finalScore, setFinalScore] = useState(0); // State for final score of player
   const [gameover, setGameover] = useState(false); // State for game over 
   const numCheese = countCheese(gameboard);
 
@@ -248,20 +248,14 @@ function eatCheese(gameboard, x, y){
     return gameboard;
   }
 }
-  function showGameOverScreen(){
-    if(gameover){
-      var x = document.getElementById('gameOver')
-      x.style.display = 'block';
-    }
-  }
+  
   // Function that handles collision between the rat and the cat 
   // 
   // TODO: Implement game over-screen, handle collision 
   function endGame(){
     // TODO: collision, decrement lives? 
-    setGameover(true);
-    showGameOverScreen();
     setFinalScore(points);
+    setGameover(true);
     setGamePlay(false);
   }
 
@@ -337,7 +331,7 @@ function eatCheese(gameboard, x, y){
       return <Cat open={open}/>
     }
     // If cat position is equal to the player position
-    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+    if(gameplay && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
       endGame()
@@ -369,16 +363,14 @@ function eatCheese(gameboard, x, y){
     return <Cheese/>
   }
 
-  
+  const handleGameOver = ( finalScore ) => {
+    navigation.navigate('/GameOver', { finalScore: finalScore})
+  }
   // Then we return the html code for the game  
     return (
       <>
       { gameover ? 
-       <>
-       <div id='gameOver'>
-       <GameOver score={finalScore}/>
-        <h1>Text här va </h1></div>
-        </>: null }
+       navigation.navigate('GameOver', {finalScore: finalScore }) : null }
        {/* HTML code for the game logic  */}
        {gameplay ? 
         <div className='body' 

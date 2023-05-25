@@ -5,6 +5,7 @@ import './App.css'
 import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
 import Settings from './screens/Settings'
+import GameOver from './screens/GameOver';
 
 import Tutorial from './screens/Tutorial'
 import { ENG, SVE } from './components/Language'
@@ -86,6 +87,7 @@ function App() {
             <Routes>
               <Route path='/' element={<StartScreen/>} />
                 <Route path='/GameBoard' element={<GameBoard width={13} height={11} />}/>
+                <Route path='GameOver' element={<GameOver />}/>
                 <Route path='Settings' element={<Settings/>}/>
               <Route path='/Tutorial' element={<Tutorial width={8} height={7}/>}/>
           </Routes>

@@ -1,20 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-
-import ReactModal from 'react-modal';
-
-function GameOver({ finalScore, gameover }) {
+function GameOver({ finalScore }) {
    return(
         <>
-        <ReactModal 
-            gameover={gameover}
-            contentLabel='pop up'>
-            <h4>Game Over</h4>
-               <span className='centerScreen title'>Game Over</span>
-               <span className='centerScreen score'>Score: {finalScore} </span>
-               <span className='centerScreen pressEnter'>Press enter to continue!</span>
-               </ReactModal>
-               </>
+        
+            <h2>Game Over </h2>
+            <h3>Your score: {finalScore}</h3>
+            <button onClick={() => console.log('button pressed')}>Enter</button>
+         
+         </>
     )
    }
 
