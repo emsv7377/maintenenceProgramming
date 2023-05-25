@@ -376,7 +376,7 @@ function eatCheese(gameboard, x, y){
               gridTemplateRows: `repeat(${height}, 1fr)`,
               maxHeight: '60vh',
               maxWidth: '100vw',
-              aspectRatio: '1 / 1' 
+              aspectRatio: '4 / 3' 
             }}>
             {gameboard.map((cells) => {
               return cells.map(({ x, y }) => (
