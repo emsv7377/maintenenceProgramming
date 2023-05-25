@@ -231,6 +231,7 @@ function isCheeseEaten(gameboard,x,y){
 function eatCheese(gameboard, x, y){
   // The actual cell 
   let cell = gameboard[y][x]
+  
   // Check if cell exists and if the cheese has been eaten 
   if(cell && !isCheeseEaten(gameboard,x,y)){
     // If cheese not eaten, increment score by one
@@ -241,7 +242,9 @@ function eatCheese(gameboard, x, y){
     playChew();
     // Return the updated game board 
     return gameboard;
-  } else {
+  } else if (points != 0 && numCheese === 0){
+    endGame();
+  } else{ 
     // Return game board as is
     return gameboard;
   }
@@ -321,7 +324,6 @@ function eatCheese(gameboard, x, y){
   // Determines what type of elements are in each cell
   //  
   const determineElements = (gameboard, x, y) => {
-    
     // If cell is equal to the value of cat position the cat is placed there
     if(x === catPosition.x && y === catPosition.y){
       // Update cell value to cat 
@@ -333,8 +335,7 @@ function eatCheese(gameboard, x, y){
     if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
-      endGame()
-      console.log('collision - game over');
+      endGame();
     }
     // If the cell is equal to the player coordinates, we place the rat there
     if (x === playerCoords.x && y === playerCoords.y) {
@@ -376,8 +377,6 @@ function eatCheese(gameboard, x, y){
             fontSize:30, 
             fontWeight:'bold'}}>
              {language.score.titleText}{points}
-             {' cheese: '}{numCheese}
-             { ' gameover: '}{gameover.toString()}
         {/* The game board  */}
           <div  
             className="game-board" 
