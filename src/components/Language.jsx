@@ -17,6 +17,19 @@ export const ENG = {
     },
     score:{
         titleText: 'Score: '
+    },
+    tryAgainBtn: {
+        titleText: 'Play again!'
+    }, 
+    toStartPageBtn: {
+        titleText: 'Back to start page'
+    },
+    yourPoints:{
+        titleText: 'You scored: ',
+        subText: ' points!'
+    },
+    gameOver:{
+        titleText:'Game over'
     }
 }
 
@@ -40,4 +53,17 @@ export const SVE = {
     score: {
         titleText: 'Poäng: '
     },
+    tryAgainBtn: {
+        titleText: 'Spela igen!'
+    }, 
+    toStartPageBtn: {
+        titleText: 'Till startsidan'
+    },
+    yourPoints:{
+        titleText: 'Du fick: ',
+        subText: ' poäng!'
+    }, 
+    gameOver:{
+        titleText: 'Spelet slut'
+    }
 }

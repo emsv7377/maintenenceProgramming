@@ -5,7 +5,7 @@ import './App.css'
 import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
 import Settings from './screens/Settings'
-import GameOver from './screens/GameOver';
+import GameOver from './screens/GameOver'
 
 import Tutorial from './screens/Tutorial'
 import { ENG, SVE } from './components/Language'

@@ -17,6 +17,7 @@ import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
 import GameOver from '../screens/GameOver';
+import { useNavigate } from 'react-router-dom';
 
 
 function GameBoard({ width, height }) {
@@ -29,14 +30,13 @@ function GameBoard({ width, height }) {
   const [finalScore, setFinalScore] = useState(0); // State for final score of player
   const [gameover, setGameover] = useState(false); // State for game over 
   const numCheese = countCheese(gameboard);
-
-  const [gameplay, setGamePlay] = useState(true);
+  const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
 
   // TODO: change to volume: 0.1 or 0.2 debugging done
-  const [playChew] = useSound(chew, {volume:0}); // State for sound effect: eatCheese
-
-  const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
+  const [playChew] = useSound(chew, {volume:0.1}); // State for sound effect: eatCheese
   const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat's position
+
+  const navigation = useNavigate();
 
   // Add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
@@ -157,8 +157,6 @@ function countCheese(gameboard){
   });
   return count;
 }
-
-
 
 // Calculates the adjacent cells, from the position of the Cat 
 // The adjacent cells are either to the left, right, up or down. 
@@ -323,6 +321,7 @@ function eatCheese(gameboard, x, y){
   // Determines what type of elements are in each cell
   //  
   const determineElements = (gameboard, x, y) => {
+    
     // If cell is equal to the value of cat position the cat is placed there
     if(x === catPosition.x && y === catPosition.y){
       // Update cell value to cat 
@@ -331,7 +330,7 @@ function eatCheese(gameboard, x, y){
       return <Cat open={open}/>
     }
     // If cat position is equal to the player position
-    if(gameplay && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
       endGame()
@@ -363,14 +362,11 @@ function eatCheese(gameboard, x, y){
     return <Cheese/>
   }
 
-  const handleGameOver = ( finalScore ) => {
-    navigation.navigate('/GameOver', { finalScore: finalScore})
-  }
   // Then we return the html code for the game  
     return (
       <>
       { gameover ? 
-       navigation.navigate('GameOver', {finalScore: finalScore }) : null }
+        navigation('/GameOver', { state: {finalScore: points }}) : null }
        {/* HTML code for the game logic  */}
        {gameplay ? 
         <div className='body' 
