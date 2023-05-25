@@ -31,7 +31,7 @@ function GameBoard({ width, height }) {
   const [playChew] = useSound(chew, {volume:0}); // State for sound effect: eatCheese
 
   const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
-  const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat 
+  const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat's position
 
   // Sets the Direction state according to keyboard input
   const handleKeyPress = (e) => {
