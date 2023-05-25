@@ -1,8 +1,16 @@
+/**
+ * File: StartScreen.jsx 
+ * 
+ * This file contains logic for the Start page of the Ratman game.
+ * It renders an animated Ratman, allows navigation between components  
+ * 
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
-//import GameBoard from '../components/GameBoard'
-//import pacman from '../assets/pacman.png'
-//import index from '../index.css?inline';
 import Rat from '../components/Rat';
 import Cheese from '../components/Cheese';
 
@@ -82,3 +90,6 @@ const styles = {
 }
 
 export default StartScreen;
+//************
+// END of file StartScreen.jsx 
+//************

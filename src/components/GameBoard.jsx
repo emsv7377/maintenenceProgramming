@@ -18,7 +18,6 @@ import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
 import GameOver from '../screens/GameOver';
 
-
 function GameBoard({ width, height }) {
   const [gameboard,setGameboard] = useState([]); // State for gameboard 
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // State for the player's position
@@ -26,11 +25,11 @@ function GameBoard({ width, height }) {
   const [direction, setDirection] = useState('r') // r(ight), l(eft), u(p), d(own). Direction to go next tick.
   const [points, setPoints] = useState(0);  // State for player's score 
   const language = useContext(LanguageContext); // State for current language 
-  
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0}); // State for sound effect: eatCheese
-
-  const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
+  
+  // TODO: add logic to end game 
+  //const [isPlaying, setIsPlaying] = useState(true);  // State for status of game 
   const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat 
 
   // Sets the Direction state according to keyboard input

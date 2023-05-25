@@ -1,3 +1,13 @@
+/**
+ * File: Language.jsx 
+ * 
+ * This file contains the dictionary, with the text strings used in the 
+ * game to enable translations between the languages 
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
 export const ENG = {
     language: 'english',
     startButton:{
@@ -38,3 +48,6 @@ export const SVE = {
         titleText:'Svenska'
     },
 }
+//************
+// END of file Language.jsx 
+//************

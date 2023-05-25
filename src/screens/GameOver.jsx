@@ -1,8 +1,16 @@
+/**
+ * File: Game.jsx 
+ * 
+ * This file contains logic for the GameOver page 
+ * 
+ * TODO: (Not working currently) 
+ *    Remove fixed text strings to allow translations´
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom'
-import GameBoard from '../components/GameBoard'
-import pacman from '../assets/pacman.png'
-import index from '../index.css?inline';
 
 function GameOver({ score }) {
 
@@ -17,3 +25,6 @@ function GameOver({ score }) {
    }
 
 export default GameOver;
+//************
+// END of file GameOver.jsx 
+//************

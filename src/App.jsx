@@ -1,6 +1,15 @@
+/**
+ * File: App.jsx 
+ * 
+ * This file contains logic for rendering the application.
+ * This includes enabling navigation between pages, set and change language  
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import './App.css'
 import GameBoard from './components/GameBoard'
 import StartScreen from './screens/StartScreen'
@@ -39,7 +48,7 @@ function App() {
     backgroundColor:'white',
   }
 
-  // Creates a top menu
+  // Creates the top menu
   // TODO: Rearrange the help button and music button 
   function topMenu(){
     return(
@@ -95,3 +104,6 @@ function App() {
 }
 
 export default App
+//************
+// END of file App.jsx 
+//************
