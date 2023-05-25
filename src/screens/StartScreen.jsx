@@ -40,9 +40,21 @@ function StartScreen(){
     return(
         <div className='body'>
             <h1>{language.headerComponent.titleText}</h1>
-                <div className='row'
-                    style={{height:'20%',width:'20%'}}>
-                        <Rat open={open}/><Cheese/>
+                <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}>
+                    <div className='row'
+                        style={{
+                            height: '40%',
+                            width: '40%',
+                            display: 'flex',
+                            gap: '10px',
+                            alignItems: 'center'
+                        }}>
+                            <Rat open={open}/><Cheese/>
+                    </div>
                 </div>
                 <form onSubmit={navGameBoard}>
                     <button 
