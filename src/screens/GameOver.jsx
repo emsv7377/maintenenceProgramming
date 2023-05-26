@@ -4,32 +4,37 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import LanguageContext from '../components/LanguageContext';
 
 const GameOver = ({finalScore}) => {
-   const navigate = useNavigate();
+   // For navigating to other pages    
+   const navigate = useNavigate();   
+   // Language context                
    const language = useContext(LanguageContext);
-   const location = useLocation();
-
-   console.log(location)
+   // Allows fetching user points from Game       
+   const location = useLocation();                    
 
    return(
         <>
+        {/* Header */}
             <h1>{language.gameOver.titleText} </h1>
+            {/* Subheading with point score */}
             { location.state.finalScore != null ? 
                <h2>
                   {language.yourPoints.titleText} {location.state.finalScore} {language.yourPoints.subText}
                </h2> : null }
-           
-                        <button 
-                           onClick={() => navigate('/GameBoard')}
-                           style={styles}
-                            type='submit'> 
-                            {language.tryAgainBtn.titleText} 
-                        </button>
-                        <button 
-                           onClick={() => navigate('/')}
-                           style={styles}
-                            type='submit'> 
-                            {language.toStartPageBtn.titleText}
-                        </button>
+               {/* Buttons with navigation */}
+                  <div className="cell" style={{ flexDirection:'column', alignItems:'center'}}>
+                  <button 
+                     onClick={() => navigate('/GameBoard')}
+                     style={styles}
+                     type='submit'> 
+                     {language.tryAgainBtn.titleText} 
+                  </button>
+                  <button 
+                     onClick={() => navigate('/')}
+                     style={styles}
+                     type='submit'> 
+                     {language.toStartPageBtn.titleText}
+                  </button>
+                  </div>
          
          </>
     )

@@ -25,7 +25,7 @@ export const ENG = {
         titleText: 'Back to start page'
     },
     yourPoints:{
-        titleText: 'You scored: ',
+        titleText: 'You scored ',
         subText: ' points!'
     },
     gameOver:{
@@ -60,7 +60,7 @@ export const SVE = {
         titleText: 'Till startsidan'
     },
     yourPoints:{
-        titleText: 'Du fick: ',
+        titleText: 'Du fick ',
         subText: ' poäng!'
     }, 
     gameOver:{
