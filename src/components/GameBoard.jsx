@@ -260,12 +260,9 @@ function eatCheese(gameboard, x, y){
     setGamePlay(false);
   }
 
-
-
   // Function that increments point counter by one 
   // 
   function incrementPoints(){
-    
     if(numCheese === 0){
       return points;
     } else {
@@ -325,18 +322,19 @@ function eatCheese(gameboard, x, y){
   //  
   const determineElements = (gameboard, x, y) => {
     // If cell is equal to the value of cat position the cat is placed there
-    if(x === catPosition.x && y === catPosition.y){
-      // Update cell value to cat 
-      updateCellValue(gameboard,x,y,'cat')
-      // Return the cat 
-      return <Cat open={open}/>
-    }
     // If cat position is equal to the player position
     if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
       // The game is over 
       // TODO: Implement collision handling 
       endGame();
     }
+    if(x === catPosition.x && y === catPosition.y){
+      // Update cell value to cat 
+      updateCellValue(gameboard,x,y,'cat')
+      // Return the cat 
+      return <Cat open={open}/>
+    }
+    
     // If the cell is equal to the player coordinates, we place the rat there
     if (x === playerCoords.x && y === playerCoords.y) {
       // Update cell value to rat
