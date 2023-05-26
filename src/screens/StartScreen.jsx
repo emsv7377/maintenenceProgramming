@@ -39,23 +39,28 @@ function StartScreen(){
 
     return(
         <div className='body'>
+            {/* Header  */}
             <h1>{language.headerComponent.titleText}</h1>
                 <div style={{
                     width: '100%',
                     display: 'flex',
                     justifyContent: 'center'
                 }}>
+                    {/* Header animation */}
                     <div className='row'
                         style={{
-                            height: '40%',
-                            width: '40%',
+                            height: '25%',
+                            width: '25%',
                             display: 'flex',
                             gap: '10px',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            justifyContent:'center',
+                            marginBottom:'5%',
                         }}>
                             <Rat open={open}/><Cheese/>
                     </div>
                 </div>
+                {/* Buttons with navigation  */}
                 <form onSubmit={navGameBoard}>
                     <button 
                         style={styles}
