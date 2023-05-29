@@ -1,3 +1,12 @@
+/**
+ * File: Tutorial.jsx 
+ * 
+ * This file contains the tutorial of RatMan, which includes navigating the rat,
+ * collecting cheese and game over. Checkmarks appear after done task. 
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 import React, { useState, useEffect, useContext, ToutchableOpacity } from 'react';
 import { useNavigate } from 'react-router-dom'
 import Rat from '../components/Rat';
@@ -5,6 +14,7 @@ import keyboard from '../assets/keyboard.png';
 import check from '../assets/check.png';
 import Brick from '../components/Brick';
 import Cheese from '../components/Cheese';
+import Cat from '../components/Cat';
 import LanguageContext from '../components/LanguageContext';
 import useSound from 'use-sound';
 import chew from '../components/audio/chew.mp3'
@@ -19,12 +29,16 @@ function Tutorial(props) {
     const [points, setPoints] = useState(0);  // state for player's score 
     const language = useContext(LanguageContext); // state for current language 
     const [playChew] = useSound(chew, {volume:0.2}); // state for sound effect: eatCheese
-    const navigate = useNavigate();
-    const [alreadyShown, setAlreadyShown] = useState(false);
-    const [showing1, setShowing1] = useState(true);
-    const [showing2, setShowing2] = useState(false);
-    const [showing3, setShowing3] = useState(false);
+    const [showing1, setShowing1] = useState(false); // state for first checkmark
+    const [showing2, setShowing2] = useState(false); // state for second checkmark
+    const [showing3, setShowing3] = useState(false); // state for third checkmark
     const [eaten, setEaten] = useState(false);
+    const [catPosition, setCatPosition] = useState({x:6, y:5}) // State for cat's position
+    const [gameover, setGameover] = useState(false); // State for game over 
+    const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
+    const [finalScore, setFinalScore] = useState(0); // State for final score of player
+
+    const navigation = useNavigate();
 
 
     // sets direction state according to keyboard input
@@ -33,23 +47,23 @@ function Tutorial(props) {
         case 'w':
         case 'ArrowUp':
           setDirection('u')
+            setShowing1(true) //show the green checkmark next to "move with arrows"
+          
           break
         case 'a':
         case 'ArrowLeft':
           setDirection('l')
+            setShowing1(true) //show the green checkmark next to "move with arrows"
           break
         case 's':
         case 'ArrowDown':
           setDirection('d')
-          setShowing1(false)
-          if (!alreadyShown) {
-            setShowing2(true)
-            setAlreadyShown(true)
-          }
+            setShowing1(true) //show the green checkmark next to "move with arrows"
           break
         case 'd':
         case 'ArrowRight':
           setDirection('r')
+            setShowing1(true) //show the green checkmark next to "move with arrows"
           break
       }
     }
@@ -102,14 +116,13 @@ function Tutorial(props) {
       }
     },[])
   
-    // change open state and player coordinates every 300 ms.
+    // change open state and player coordinates every 200 ms.
     useEffect(() => {
       setTimeout(() => { 
         setOpen(!open)
         move()
       }, 200)
     }, [open])
-    //setTimeout(() => setOpen(!open), 500)
     
   
 // Creates a game board with empty cells as a matrice
@@ -131,7 +144,7 @@ useEffect(() => {
      
   /**
    * Updates the cellValue parameter of a chosen cell in the array rows 
-   * @param {*} rows The array of cells 
+   * @param {*} gameboard The gameboard (array of cells)
    * @param {*} x The x coordinate of the chosen cell
    * @param {*} y The y coordinate of the chosen cell 
    * @param {String} newValue  the new cellValue value for x and y
@@ -153,7 +166,7 @@ useEffect(() => {
   
   /**
    * Checks if the cheese of a cell is eaten 
-   * @param {*} rows The game board
+   * @param {*} gameboard The game board
    * @param {*} x X coordinate of the cell
    * @param {*} y Y coordinate of the cell 
    * @returns true if cell is empty, false otherwise 
@@ -168,41 +181,27 @@ useEffect(() => {
   
   /**
    * Eats a cheese and increment score by one 
-   * @param {*} rows The game board  
+   * Also when cheese os eaten, two checkmarks appear
+   * @param {*} gameboard The game board  
    * @param {*} x The x coordinate of the cell
    * @param {*} y The y coordinate of the cell 
    * @returns the updated game board 
    */
     function eatCheese(gameboard, x,y){
       let cell = gameboard[y][x]
-      console.log(cell)
       if(cell && isCheese(cell.x, cell.y) && eaten === false){
-        console.log('är vi här???')
-        // Increment score by one
-        incrementPoints()
-        // Update cell value that it is empty 
-        updateCellValue(gameboard,x,y,'empty')
-        // Plays sound effect 
-        setShowing2(false)
-        setShowing3(true)
-        playChew();
-        setEaten(true)
-        console.log(showing);
-        // Return the updated game board 
+        incrementPoints()// Increment score by one
+        updateCellValue(gameboard,x,y,'empty')// Update cell value that it is empty 
+        setShowing2(true) // show the checkmark for eating cheese
+        setShowing3(true) // show the checkmark for avoiding cats 
+        playChew();         // Plays sound effect 
+        setEaten(true)// Return the updated game board 
         return gameboard;
       } else {
-        console.log('already eaten')
       // Return updated game board
         return gameboard;
     }
   }
-    /**
-     * Decrement lives of player or points? 
-     */
-    function collision(){
-      // TODO: collision, decrement lives? 
-      decrementPoints();
-    }
   
     /**
      * Increments point counter by one 
@@ -211,17 +210,6 @@ useEffect(() => {
     function incrementPoints(){
       let p = 0;
       p = points + 1;
-      return(setPoints(p));
-    }
-    
-    /**
-     * Decrements point counter by one
-     * @returns The decremented point counter
-     */
-    function decrementPoints(){
-      let p = 0;
-      p = points - 1;
-      console.log('Decrements score')
       return(setPoints(p));
     }
     
@@ -240,15 +228,39 @@ useEffect(() => {
   
     }
 
+     /**
+     * Returns at which coordinates there are cheese 
+     * @returns true or false
+     */
     const isCheese = (x, y) => {
-      if (y === 3 && x === 4) {
+      if (y === 3 && x === 4) { // Only one cheese piece on tutorial
         return true
       }
       return false
     }
 
+  // Function that handles collision between the rat and the cat 
+  function endGame(){
+    // TODO: collision, decrement lives? 
+    setGameover(true);
+    setFinalScore(points);
+    setGamePlay(false);
+  }
+
      // Determines what type of elements are in each cell 
      const determineElements = (gameboard, x, y) => {
+          // If cell is equal to the value of cat position the cat is placed there
+        // If cat position is equal to the player position
+        if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+          // The game is over 
+          endGame();
+        }
+        if(x === catPosition.x && y === catPosition.y){
+          // Update cell value to cat 
+          updateCellValue(gameboard,x,y,'cat')
+          // Return the cat 
+          return <Cat open={open}/>
+        }
         if (x === playerCoords.x && y === playerCoords.y) {
           updateCellValue(gameboard,x,y,'rat')
           return <Rat open={open} direction={direction}/>
@@ -258,7 +270,7 @@ useEffect(() => {
           return <Brick/>
         }
         if(isCheeseEaten(gameboard,x,y)){
-          return;
+          return; //return empty cell if cheese is already eaten
         }
         if (isCheese(x, y)){
         updateCellValue(gameboard,x,y,'cheese')
@@ -267,43 +279,47 @@ useEffect(() => {
       }
 
    return(
-    <><div style={{
+    <>
+    <h1>{language.tutorial.titleText}</h1>
+     { gameover ? 
+        navigation('/GameOver', { state: {finalScore: points }}) : null }
+    {gameplay ?
+    <div style={{
       flexDirection: 'row',
       fontSize: 30,
       fontWeight: 'bold',
       display: 'flex',
       alignItems: 'flex-start', // Align items to the top of the flex container
-      marginLeft: 20, // Add left margin for spacing
+      marginLeft: 20, 
     }}>
       <div style={{
       flexDirection: 'column',
-      fontSize: 30,
+      fontSize: '3vh',
       justifyContent: 'space-evenly',
       fontWeight: 'bold',
       display: 'flex',
       alignItems: 'flex-start', // Align items to the top of the flex container
-      marginLeft: 20, // Add left margin for spacing
-      marginRight: 60, // Add left margin for spacing
+      marginLeft: 20,
+      marginRight: 60,
+      maxHeight: '60vh',
+      maxWidth: '100vw',
+      aspectRatio: '4 / 3'
     }}>
-      <div>Move with arrows</div>
-      <div><img src={keyboard} width={100} height={70}></img> </div>
-      <div style={{ opacity: showing1 ? 0 : 1 }}>
-      <img src={check} width={100} height={70}></img> 
-      </div>
-      <div>
-      <div>Eat cheese to earn points!</div>
-      {language.score.titleText}{points}
-      <div style={{ opacity: showing2 ? 0 : 1 }}>
-      <img src={check} width={100} height={70}></img> 
-      </div>
-      </div>
-      <div>
-      Avoid cats
-      <div style={{ opacity: showing3 ? 0 : 1 }}>
-      <img src={check} width={100} height={70}></img> 
-      </div>
-
-      </div>
+ <div style={{ display: 'flex', alignItems: 'center', background: 'lightgrey', padding: 10, marginBottom: 20, borderRadius: 10, width: '100%'}}>
+    <div style={{ flex: 1 }}>{language.arrows.titleText}</div>
+    <div style={{ marginLeft: 10 }}><img src={keyboard} width={100} height={70} /></div>
+    <div style={{ marginLeft: 10, opacity: showing1 ? 1 : 0 }}><img src={check} width={100} height={70} /></div>
+  </div>
+  <div style={{ display: 'flex', alignItems: 'center', background: 'lightgrey', padding: 10, marginBottom: 20, borderRadius: 10, width: '100%' }}>
+    <div style={{ flex: 1 }}>{language.earnPoints.titleText}</div>
+    {language.score.titleText}{points}
+    <div style={{ marginLeft: 10, opacity: showing2 ? 1 : 0 }}><img src={check} width={100} height={70} /></div>
+  </div>
+  <div style={{ display: 'flex', alignItems: 'center', background: 'lightgrey', padding: 10, marginBottom: 20, borderRadius: 10, width: '100%' }}>
+    <div style={{ flex: 1 }}>{language.avoidCats.titleText}</div>
+    <div style={{ marginLeft: 10 }}><img src={'cat-open.svg'} width={100} height={70} /></div>
+    <div style={{ marginLeft: 10, opacity: showing3 ? 1 : 0 }}><img src={check} width={100} height={70} /></div>
+  </div>
       </div>
   <div className="game-board" style={{backgroundColor: 'gray',
               display: 'grid',
@@ -311,7 +327,7 @@ useEffect(() => {
               gridTemplateRows: `repeat(${height}, 1fr)`,
               maxHeight: '60vh',
               maxWidth: '100vw',
-              aspectRatio: '1 / 1' }}>
+              aspectRatio: '4 / 3' }}>
               {gameboard.map((cells) => {
               return cells.map(({ x, y }) => (
                   <div key={`${x}-${y}`} className="cell" style={{ color: 'gray', gridArea: `${y + 1} / ${x + 1} / ${y + 2} / ${x + 2}`}}>
@@ -321,20 +337,9 @@ useEffect(() => {
             })}
   </div>
   </div>
+  : null }
   </>
 );
    }
 
-   const styles = {
-    backgroundColor:'black', 
-    color:'white', 
-    fontSize:22, 
-    width: 280, 
-    height:60, 
-    margin:10,
-    borderRadius:15, 
-    alignSelf:'center',
-    fontWeight:'bold'
-}
-//  
 export default Tutorial;

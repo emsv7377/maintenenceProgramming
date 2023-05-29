@@ -28,8 +28,20 @@ export const ENG = {
         titleText: 'You scored ',
         subText: ' points!'
     },
+    tutorial:{
+        titleText: 'How to play'
+    },
     gameOver:{
         titleText:'Game over'
+    },
+    arrows:{
+        titleText:'Move with arrows'
+    },
+    earnPoints:{
+        titleText:'Eat cheese to earn points'
+    },
+    avoidCats:{
+        titleText:'Avoid cats'
     }
 }
 
@@ -65,5 +77,17 @@ export const SVE = {
     }, 
     gameOver:{
         titleText: 'Spelet slut'
+    },
+    tutorial:{
+        titleText: 'Såhär spelar du'
+    },
+    arrows:{
+        titleText:'Flytta dig med pilarna'
+    },
+    earnPoints:{
+        titleText:'Ät ost för att samla poäng'
+    },
+    avoidCats:{
+        titleText:'Undvik katter'
     }
 }
