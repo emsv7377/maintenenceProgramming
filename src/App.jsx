@@ -1,3 +1,12 @@
+/**
+ * File: App.jsx 
+ * 
+ * This file contains the functionality for rendering the complete RatMan game 
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -20,6 +29,7 @@ function App() {
   const [language,setLanguage] = useState({ language: ENG }); // State for language, default english
 
   // Handles language changes 
+  // 
   const onLanguageChange = language => {
     let newLang = {};
     switch(language){
@@ -98,3 +108,6 @@ function App() {
 }
 
 export default App
+//************
+// END of file App.jsx 
+//************
