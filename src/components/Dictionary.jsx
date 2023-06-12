@@ -1,3 +1,13 @@
+/**
+ * File: Dictionary.jsx 
+ * 
+ * This file contains the dictionary used in the game
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
+
+// English translation
 export const ENG = {
     language: 'english',
     startButton:{
@@ -45,6 +55,7 @@ export const ENG = {
     }
 }
 
+// Swedish translation
 export const SVE = {
     language: 'swedish',
     startButton:{
@@ -91,3 +102,7 @@ export const SVE = {
         titleText:'Undvik katter'
     }
 }
+
+//************
+// END of file Dictionary.jsx 
+//************
