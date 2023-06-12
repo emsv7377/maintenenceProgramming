@@ -146,6 +146,8 @@ useEffect(() => {
  }
 }
 
+// Function that checks the gameboard for cheese that has not yet been eaten
+// 
 function countCheese(gameboard){
   let count = 0; 
   gameboard.forEach(row => {
@@ -252,11 +254,12 @@ function eatCheese(gameboard, x, y){
   
   // Function that handles collision between the rat and the cat 
   // 
-  // TODO: Implement game over-screen, handle collision 
   function endGame(){
-    // TODO: collision, decrement lives? 
+    // Sets final score to the curren point count, TODO: not in use?
     setFinalScore(points);
+    // Enables Game Over-Screen
     setGameover(true);
+    // Disables display of gameboard 
     setGamePlay(false);
   }
 
@@ -276,8 +279,7 @@ function eatCheese(gameboard, x, y){
   
   // Function that decrements point counter by one 
   // 
-  // TODO: Implement this when colliding with a Cat / Wall 
-  // to give player more chances than one? 
+  // TODO: Not in use. Maybe use this to implement multiple lives? 
   function decrementPoints(){
     let p = 0;
     p = points - 1;
@@ -335,7 +337,7 @@ function eatCheese(gameboard, x, y){
       return <Cat open={open}/>
     }
     
-    // If the cell is equal to the player coordinates, we place the rat there
+    // If the cell is equal to the player coordinates, the rat is placed there
     if (x === playerCoords.x && y === playerCoords.y) {
       // Update cell value to rat
       updateCellValue(gameboard,x,y,'rat')
