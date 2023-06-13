@@ -1,3 +1,11 @@
+/**
+ * File: Gameover.jsx 
+ * 
+ * This file contains the gameover-page of the application
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 import React, { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 

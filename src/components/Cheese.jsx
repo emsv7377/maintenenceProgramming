@@ -1,3 +1,11 @@
+/**
+ * File: Cheese.jsx 
+ * 
+ * This file returns an image of cheese
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 function Cheese() {
 
     return(

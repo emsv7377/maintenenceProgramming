@@ -29,7 +29,7 @@ function GameBoard({ width, height }) {
   const language = useContext(LanguageContext); // State for current language 
   const [finalScore, setFinalScore] = useState(0); // State for final score of player
   const [gameover, setGameover] = useState(false); // State for game over 
-  const numCheese = countCheese(gameboard);
+  const numCheese = countCheese(gameboard); // state for how much cheese is left on gameboard
   const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
 
   // TODO: change to volume: 0.1 or 0.2 debugging done

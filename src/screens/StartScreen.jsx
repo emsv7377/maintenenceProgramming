@@ -1,16 +1,20 @@
+/**
+ * File: StartScreen.jsx 
+ * 
+ * This file contains the startscreen of the application
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
-//import GameBoard from '../components/GameBoard'
-//import pacman from '../assets/pacman.png'
-//import index from '../index.css?inline';
 import Rat from '../components/Rat';
 import Cheese from '../components/Cheese';
-
 import LanguageContext from '../components/LanguageContext'
 
 function StartScreen(){
-    const [open, setOpen] = useState(false);
-    const language = useContext(LanguageContext);
+    const [open, setOpen] = useState(false); // state for Rat open or closed
+    const language = useContext(LanguageContext); // state for current language 
     const navigate = useNavigate();
 
     // Animates rat 

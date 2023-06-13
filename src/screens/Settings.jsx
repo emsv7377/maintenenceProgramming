@@ -1,3 +1,11 @@
+/**
+ * File: Settings.jsx 
+ * 
+ * This file contains the settings-page (not yet implemented)
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import GameBoard from '../components/GameBoard'

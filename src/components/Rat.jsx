@@ -1,3 +1,11 @@
+/**
+ * File: Rat.jsx 
+ * 
+ * This file contains the logic for the rat component
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 function Rat({ open, direction }) {
 
   let transform = ''

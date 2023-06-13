@@ -32,7 +32,7 @@ function Tutorial(props) {
     const [showing1, setShowing1] = useState(false); // state for first checkmark
     const [showing2, setShowing2] = useState(false); // state for second checkmark
     const [showing3, setShowing3] = useState(false); // state for third checkmark
-    const [eaten, setEaten] = useState(false);
+    const [eaten, setEaten] = useState(false); //state for cheese eaten or not eaten
     const [catPosition, setCatPosition] = useState({x:6, y:5}) // State for cat's position
     const [gameover, setGameover] = useState(false); // State for game over 
     const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
@@ -68,7 +68,7 @@ function Tutorial(props) {
       }
     }
   
-    // moves player according to direction state
+    // moves player according to direction state, and eats cheese at the new position
     const move = () => {
       let newCoords = {}
     

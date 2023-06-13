@@ -1,3 +1,11 @@
+/**
+ * File: Soundeffect.jsx 
+ * 
+ * This file contains the chew-soundeffect component for the application
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 import React, { useRef } from 'react';
 
 const SoundEffect = () => {

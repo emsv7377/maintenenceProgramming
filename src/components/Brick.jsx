@@ -1,3 +1,11 @@
+/**
+ * File: Brick.jsx 
+ * 
+ * This file returns a picture of a brick-wall
+ * 
+ * Version: 1.0 
+ * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
+ */
 function Brick() {
 
     return(
