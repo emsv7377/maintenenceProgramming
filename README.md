@@ -18,9 +18,16 @@ $ o
 ```
 
 ## Contributors 
-* Michaela Nordness
-* Agnes Sidemo
-* Emmy Svensson 
+* Michaela Nordness, total time: 82 h
+* Agnes Sidemo, total time: 82 h
+* Emmy Svensson, total time: 83 h
+
+## Delimitations
+The current implementation has a few delimitations and one known bug. 
+* There is only one maze available. 
+* The cat moves randomly to adjacent cells.
+* There are no available settings, for instance it is not possible to turn off the chewing sound or change the color mode.
+* The bug is that it is sometimes possible to collide with the cat for more than one time before game over.
 
 ## Attribution
 <a href="https://www.flaticon.com/free-icons/sweden" title="sweden icons">Sweden icons created by Freepik - Flaticon</a>
