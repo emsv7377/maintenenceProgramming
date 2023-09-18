@@ -11,6 +11,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
+import SuperCheese from './SuperCheese'
 import Rat from './Rat';
 import Cat from './Cat';
 import LanguageContext from './LanguageContext';
@@ -355,6 +356,10 @@ function eatCheese(gameboard, x, y){
     if(!isBrick(x,y)){
       // If cheese is eaten, return an empty cell 
       if(isCheeseEaten(gameboard,x,y)) return;
+    }
+
+    if(x==1 && y==4){
+      return <SuperCheese/>
     }
     // Otherwise it is a cheese
     // Update cell value to cheese 
