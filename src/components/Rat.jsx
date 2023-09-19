@@ -6,7 +6,7 @@
  * Version: 1.0 
  * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
  */
-function Rat({ open, direction }) {
+function Rat({ open, direction, powerupActive}) {
 
   let transform = ''
   if (direction === 'l') transform = 'scaleX(-1)'//flip an image

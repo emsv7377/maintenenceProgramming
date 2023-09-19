@@ -21,6 +21,7 @@ import GameOver from '../screens/GameOver';
 import { useNavigate } from 'react-router-dom';
 
 
+
 function GameBoard({ width, height }) {
   const [gameboard,setGameboard] = useState([]); // State for gameboard 
   const [playerCoords, setPlayerCoords] = useState({x: 1, y: 1}); // State for the player's position
@@ -32,12 +33,24 @@ function GameBoard({ width, height }) {
   const [gameover, setGameover] = useState(false); // State for game over 
   const numCheese = countCheese(gameboard); // state for how much cheese is left on gameboard
   const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
+  const [powerUpActive, setPowerUpActive] = useState(false);
+  const [timer, setTimer] = useState(0);
 
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0.1}); // State for sound effect: eatCheese
   const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat's position
 
   const navigation = useNavigate();
+
+  const startTimer = () => {
+    var intervalID = setInterval(() => {
+      setTimer(timer+1)
+      if(timer === 15){
+        setPowerUpActive(false);
+        clearInterval(intervalID);
+      }
+    }, 1000);
+  }
 
   // Add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
@@ -226,8 +239,16 @@ function isCheeseEaten(gameboard,x,y){
   if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
     return true;
   }
+  if (cell.cellValue==='supercheese' && cell.cellValue==='rat'){
+    setPowerUpActive(true);
+    startTimer();
+    console.log("PowerUp active" ,powerUpActive, timer)
+    updateCellValue(gameboard,x,y,'empty')
+    return true
+  }
   return false;
 }
+
 
 // Function that handles eating cheese from the board 
 // 
@@ -240,7 +261,9 @@ function eatCheese(gameboard, x, y){
     // If cheese not eaten, increment score by one
     incrementPoints()
     // Update cell value to empty 
-    updateCellValue(gameboard,x,y,'empty')
+    if(cell.cellValue!='supercheese'){
+      updateCellValue(gameboard,x,y,'empty')
+    }
     // Plays sound effect when eating
     playChew();
     // Return the updated game board 
@@ -326,7 +349,8 @@ function eatCheese(gameboard, x, y){
   const determineElements = (gameboard, x, y) => {
     // If cell is equal to the value of cat position the cat is placed there
     // If cat position is equal to the player position
-    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+
+    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y && !powerUpActive){
       // The game is over 
       // TODO: Implement collision handling 
       endGame();
@@ -359,6 +383,7 @@ function eatCheese(gameboard, x, y){
     }
 
     if(x==1 && y==4){
+      updateCellValue(gameboard,x,y,'supercheese')
       return <SuperCheese/>
     }
     // Otherwise it is a cheese
