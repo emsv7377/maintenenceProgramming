@@ -239,13 +239,6 @@ function isCheeseEaten(gameboard,x,y){
   if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
     return true;
   }
-  if (cell.cellValue==='supercheese' && cell.cellValue==='rat'){
-    setPowerUpActive(true);
-    startTimer();
-    console.log("PowerUp active" ,powerUpActive, timer)
-    updateCellValue(gameboard,x,y,'empty')
-    return true
-  }
   return false;
 }
 
@@ -260,10 +253,15 @@ function eatCheese(gameboard, x, y){
   if(cell && !isCheeseEaten(gameboard,x,y)){
     // If cheese not eaten, increment score by one
     incrementPoints()
-    // Update cell value to empty 
-    if(cell.cellValue!='supercheese'){
+    console.log(cell.cellValue)
+    if (cell.cellValue==='supercheese'){
+      setPowerUpActive(true);
+      startTimer();
+      console.log("PowerUp active" ,powerUpActive, timer)
       updateCellValue(gameboard,x,y,'empty')
     }
+    // Update cell value to empty 
+      updateCellValue(gameboard,x,y,'empty')
     // Plays sound effect when eating
     playChew();
     // Return the updated game board 
@@ -367,7 +365,7 @@ function eatCheese(gameboard, x, y){
       // Update cell value to rat
       updateCellValue(gameboard,x,y,'rat')
       // Return the rat with state for open mouth and direction to enable animation
-      return <Rat open={open} direction={direction}/>
+      return <Rat open={open} direction={direction} powerupActive={powerUpActive}/>
     }
     // If the cell is a brick 
     if (isBrick(x, y)) {

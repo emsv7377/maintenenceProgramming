@@ -14,9 +14,11 @@ function Rat({ open, direction, powerupActive}) {
   if (direction === 'r') transform = 'rotate(0deg)'
   if (direction === 'd') transform = 'rotate(90deg)'
 
+  const powerupSuffix = powerupActive ? '-poweup' : '';
+
   return(
       <img 
-      src={`rat-${open ? 'open' : 'closed'}.svg`} // read different filenames depending on open prop
+      src={`rat-${open ? 'open' : 'closed'}${powerupSuffix}.svg`} // read different filenames depending on open and powerupActive props
       alt="rat2"
       style={{
           width: '100%',
