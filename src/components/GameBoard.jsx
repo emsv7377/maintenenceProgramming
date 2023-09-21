@@ -34,7 +34,7 @@ function GameBoard({ width, height }) {
   const numCheese = countCheese(gameboard); // state for how much cheese is left on gameboard
   const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
   const [powerUpActive, setPowerUpActive] = useState(false);
-  const [timer, setTimer] = useState(0);
+  let [timer, setTimer] = useState(0);
 
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0.1}); // State for sound effect: eatCheese
@@ -44,7 +44,8 @@ function GameBoard({ width, height }) {
 
   const startTimer = () => {
     var intervalID = setInterval(() => {
-      setTimer(timer+1)
+      setTimer(timer+=1)
+      console.log(timer," Inside setInterval")
       if(timer === 15){
         setPowerUpActive(false);
         clearInterval(intervalID);
