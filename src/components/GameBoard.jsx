@@ -17,8 +17,8 @@ import Cat from './Cat';
 import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
-import GameOver from '../screens/GameOver';
 import { useNavigate } from 'react-router-dom';
+import { cheeseCount, isCheeseEaten } from './Cheese';
 
 
 
@@ -164,14 +164,7 @@ useEffect(() => {
 // Function that checks the gameboard for cheese that has not yet been eaten
 // 
 function countCheese(gameboard){
-  let count = 0; 
-  gameboard.forEach(row => {
-    row.forEach(cell => {
-      if (cell.cellValue === 'cheese'){
-        count++;
-      }
-    });
-  });
+  let count = cheeseCount(gameboard);
   return count;
 }
 
@@ -234,14 +227,7 @@ function moveCat(catPosition){
 
 // Function that checks if the cheese of a cell is eaten
 //
-function isCheeseEaten(gameboard,x,y){
-  let cell = gameboard[y][x]
-  // If cell value is empty or rat, then the cheese is eaten 
-  if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
-    return true;
-  }
-  return false;
-}
+
 
 
 // Function that handles eating cheese from the board 
