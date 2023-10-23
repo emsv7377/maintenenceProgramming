@@ -6,7 +6,7 @@
  * Version: 1.0 
  * Authors: Michaela Nordness, Agnes Sidemo, Emmy Svensson 
  */
-function Rat({ open, direction }) {
+function Rat({ open, direction, powerupActive}) {
 
   let transform = ''
   if (direction === 'l') transform = 'scaleX(-1)'//flip an image
@@ -14,9 +14,11 @@ function Rat({ open, direction }) {
   if (direction === 'r') transform = 'rotate(0deg)'
   if (direction === 'd') transform = 'rotate(90deg)'
 
+  const powerupSuffix = powerupActive ? '-powerup' : '';
+
   return(
       <img 
-      src={`rat-${open ? 'open' : 'closed'}.svg`} // read different filenames depending on open prop
+      src={`rat-${open ? 'open' : 'closed'}${powerupSuffix}.svg`} // read different filenames depending on open and powerupActive props
       alt="rat2"
       style={{
           width: '100%',

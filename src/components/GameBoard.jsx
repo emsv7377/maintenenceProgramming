@@ -11,13 +11,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Brick from './Brick';
 import Cheese from './Cheese';
+import SuperCheese from './SuperCheese'
 import Rat from './Rat';
 import Cat from './Cat';
 import LanguageContext from './LanguageContext';
 import useSound from 'use-sound';
 import chew from './audio/chew.mp3'
-import GameOver from '../screens/GameOver';
 import { useNavigate } from 'react-router-dom';
+import { cheeseCount, isCheeseEaten } from './Cheese';
+
 
 
 function GameBoard({ width, height }) {
@@ -31,12 +33,25 @@ function GameBoard({ width, height }) {
   const [gameover, setGameover] = useState(false); // State for game over 
   const numCheese = countCheese(gameboard); // state for how much cheese is left on gameboard
   const [gameplay, setGamePlay] = useState(true); // State for when game is playing 
+  const [powerUpActive, setPowerUpActive] = useState(false);
+  let [timer, setTimer] = useState(0);
 
   // TODO: change to volume: 0.1 or 0.2 debugging done
   const [playChew] = useSound(chew, {volume:0.1}); // State for sound effect: eatCheese
   const [catPosition, setCatPosition] = useState({x:1, y:8}) // State for cat's position
 
   const navigation = useNavigate();
+
+  const startTimer = () => {
+    var intervalID = setInterval(() => {
+      setTimer(timer+=1)
+      console.log(timer," Inside setInterval")
+      if(timer === 15){
+        setPowerUpActive(false);
+        clearInterval(intervalID);
+      }
+    }, 1000);
+  }
 
   // Add eventlistner for keypresses. When a key is pressed, handleKeyPress is called.
   useEffect(() => {
@@ -149,14 +164,7 @@ useEffect(() => {
 // Function that checks the gameboard for cheese that has not yet been eaten
 // 
 function countCheese(gameboard){
-  let count = 0; 
-  gameboard.forEach(row => {
-    row.forEach(cell => {
-      if (cell.cellValue === 'cheese'){
-        count++;
-      }
-    });
-  });
+  let count = cheeseCount(gameboard);
   return count;
 }
 
@@ -219,14 +227,8 @@ function moveCat(catPosition){
 
 // Function that checks if the cheese of a cell is eaten
 //
-function isCheeseEaten(gameboard,x,y){
-  let cell = gameboard[y][x]
-  // If cell value is empty or rat, then the cheese is eaten 
-  if (cell && cell.cellValue === 'empty' || cell && cell.cellValue === 'rat'){
-    return true;
-  }
-  return false;
-}
+
+
 
 // Function that handles eating cheese from the board 
 // 
@@ -238,8 +240,15 @@ function eatCheese(gameboard, x, y){
   if(cell && !isCheeseEaten(gameboard,x,y)){
     // If cheese not eaten, increment score by one
     incrementPoints()
+    console.log(cell.cellValue)
+    if (cell.cellValue==='supercheese'){
+      setPowerUpActive(true);
+      startTimer();
+      console.log("PowerUp active" ,powerUpActive, timer)
+      updateCellValue(gameboard,x,y,'empty')
+    }
     // Update cell value to empty 
-    updateCellValue(gameboard,x,y,'empty')
+      updateCellValue(gameboard,x,y,'empty')
     // Plays sound effect when eating
     playChew();
     // Return the updated game board 
@@ -325,7 +334,8 @@ function eatCheese(gameboard, x, y){
   const determineElements = (gameboard, x, y) => {
     // If cell is equal to the value of cat position the cat is placed there
     // If cat position is equal to the player position
-    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y){
+
+    if(!gameover && catPosition.x === playerCoords.x && catPosition.y === playerCoords.y && !powerUpActive){
       // The game is over 
       // TODO: Implement collision handling 
       endGame();
@@ -342,7 +352,7 @@ function eatCheese(gameboard, x, y){
       // Update cell value to rat
       updateCellValue(gameboard,x,y,'rat')
       // Return the rat with state for open mouth and direction to enable animation
-      return <Rat open={open} direction={direction}/>
+      return <Rat open={open} direction={direction} powerupActive={powerUpActive}/>
     }
     // If the cell is a brick 
     if (isBrick(x, y)) {
@@ -355,6 +365,11 @@ function eatCheese(gameboard, x, y){
     if(!isBrick(x,y)){
       // If cheese is eaten, return an empty cell 
       if(isCheeseEaten(gameboard,x,y)) return;
+    }
+
+    if(x==1 && y==4){
+      updateCellValue(gameboard,x,y,'supercheese')
+      return <SuperCheese/>
     }
     // Otherwise it is a cheese
     // Update cell value to cheese 
